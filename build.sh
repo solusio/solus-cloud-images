@@ -39,6 +39,7 @@ usage() {
 		    fedora                      Fedora  images
 		    centos-8                    CentOS 8 images
 		    windows-2019                Windows images
+		    alpine                      Alpine images
 
         Options:
             --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
@@ -94,6 +95,12 @@ do_build() {
   local config=
 
   case "$opt_type" in
+  alpine)
+    inten="Build alpine cloud-init image"
+    config="alpine/solus-alpine.json"
+    image_path="output/alpine"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
   debian)
     inten="Build debian 8 cloud-init image"
     config="debian/solus-debian-8.json"
@@ -178,7 +185,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="debian fedora centos-8 windows-2019"
+image_types_allowed="alpine debian fedora centos-8 windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
