@@ -1,0 +1,69 @@
+{
+	"variables": {
+		"user": "fedora",
+		"password": "fedora",
+		"disk_size": "5000",
+		"output_directory": "output/fedora",
+		"output_image_name": "solus.io-fedora-29"
+	},
+
+	"builders": [
+		{
+			"name": "solus.io",
+			"vm_name": "{{user `output_image_name`}}.qcow2",
+			"type": "qemu",
+			"qemuargs": [
+				[ "-m", "2048m" ]
+			],
+			"format": "qcow2",
+			"headless": true,
+			"accelerator": "kvm",
+			"disk_size": "{{ user `disk_size` }}",
+			"iso_url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Server/x86_64/iso/Fedora-Server-netinst-x86_64-29-1.2.iso",
+			"iso_checksum": "aa7fb0e6e5b71774ebdaab0dae76bdd9246a5bc7aedc28b7f1103aaaf9750654",
+			"iso_checksum_type": "sha256",
+			"output_directory": "{{user `output_directory`}}",
+			"shutdown_command": "echo 'fedora' | sudo -S /sbin/shutdown -hP now",
+			"http_directory": "http",
+			"ssh_username": "{{ user `user` }}",
+			"ssh_password": "{{ user `password` }}",
+			"disk_compression": true,
+			"ssh_host_port_min" : 2222,
+			"ssh_host_port_max" : 4444,
+			"vnc_port_min": 5901,
+			"vnc_port_max": 5901,
+			"http_port_min": 8501,
+			"http_port_max": 8501,
+			"ssh_wait_timeout": "40m",
+			"net_device": "virtio-net",
+			"disk_interface": "virtio",
+			"vnc_bind_address": "0.0.0.0",
+			"boot_wait": "10s",
+			"boot_command": [
+				"<tab> linux ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-fedora29.cfg <enter><wait>"
+			]
+		}
+	],
+
+	"provisioners": [
+		{
+			"type": "file",
+			"source": "files/rc.local-fedora",
+			"destination": "/tmp/rc.local"
+		},
+		{
+			"type": "file",
+			"source": "files/rc-local-fedora.conf",
+			"destination": "/tmp/rc-local-fedora.conf"
+		},
+		{
+			"type": "shell",
+			"execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
+			"scripts": [
+				"scripts/packages.sh",
+				"scripts/configure.sh",
+				"scripts/cleanup.sh"
+			]
+		}
+	]
+}
