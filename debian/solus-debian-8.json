@@ -1,0 +1,84 @@
+{
+	"variables": {
+		"user": "debian",
+		"password": "debian",
+		"disk_size": "5000",
+		"output_directory": "output/debian",
+		"output_image_name": "solus.io-debian-8"
+	},
+
+	"builders": [
+		{
+			"name": "solus.io",
+			"vm_name": "{{user `output_image_name`}}.qcow2",
+			"type": "qemu",
+			"qemuargs": [
+					[ "-m", "2048m" ]
+			],
+			"format": "qcow2",
+			"headless": true,
+			"accelerator": "kvm",
+			"disk_size": "{{ user `disk_size` }}",
+			"iso_url": "https://cdimage.debian.org/cdimage/archive/8.11.0/amd64/iso-cd/debian-8.11.0-amd64-netinst.iso",
+			"iso_checksum": "ea799ed959d77359783e7922ed4c94a7437b083a4ce6f09e9fe41a7af6ba60df",
+			"iso_checksum_type": "sha256",
+			"output_directory": "{{user `output_directory`}}",
+			"shutdown_command": "echo 'debian' | sudo -S /sbin/shutdown -hP now",
+			"http_directory": "http",
+			"ssh_username": "{{ user `user` }}",
+			"ssh_password": "{{ user `password` }}",
+			"disk_compression": true,
+			"ssh_host_port_min" : 2222,
+			"ssh_host_port_max" : 4444,
+			"vnc_port_min": 5901,
+			"vnc_port_max": 5901,
+			"http_port_min": 8501,
+			"http_port_max": 8501,
+			"ssh_wait_timeout": "40m",
+			"net_device": "virtio-net",
+			"disk_interface": "virtio",
+			"vnc_bind_address": "0.0.0.0",
+			"boot_wait": "10s",
+			"boot_command": [
+				"<esc><wait>",
+				"install <wait>",
+				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+				"debian-installer=en_US.UTF-8 <wait>",
+				"auto <wait>",
+				"locale=en_US.UTF-8 <wait>",
+				"kbd-chooser/method=us <wait>",
+				"keyboard-configuration/xkb-keymap=us <wait>",
+				"netcfg/get_hostname=localhost <wait>",
+				"netcfg/get_domain=localdomain <wait>",
+				"fb=false <wait>",
+				"debconf/frontend=noninteractive <wait>",
+				"console-setup/ask_detect=false <wait>",
+				"console-keymaps-at/keymap=us <wait>",
+				"grub-installer/bootdev=/dev/vda <wait>",
+				"<enter><wait>"
+			]
+		}
+	],
+
+	"provisioners": [
+		{
+			"type": "file",
+			"source": "files/rc.local-debian",
+			"destination": "/tmp/rc.local"
+		},
+		{
+			"type": "file",
+			"source": "files/rc-local-debian.conf",
+			"destination": "/tmp/rc-local-debian.conf"
+		},
+		{
+			"type": "shell",
+			"execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
+			"scripts": [
+				"scripts/packages.sh",
+				"scripts/configure.sh",
+				"scripts/cleanup.sh"
+			]
+		}
+	]
+}

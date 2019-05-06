@@ -1,0 +1,69 @@
+{
+  "variables": {
+    "user": "centos",
+    "password": "centos",
+    "disk_size": "4000",
+    "output_directory": "output/centos",
+    "output_image_name": "solus.io-centos-8"
+  },
+
+  "builders": [
+    {
+      "name": "solus.io",
+      "vm_name": "{{user `output_image_name`}}.qcow2",
+      "type": "qemu",
+      "qemuargs": [
+        [ "-m", "1900m" ]
+      ],
+      "format": "qcow2",
+      "headless": true,
+      "accelerator": "kvm",
+      "disk_size": "{{ user `disk_size` }}",
+      "iso_url": "http://mirror.yandex.ru/centos/8.0.1905/isos/x86_64/CentOS-8-x86_64-1905-dvd1.iso",
+      "iso_checksum": "ea17ef71e0df3f6bf1d4bf1fc25bec1a76d1f211c115d39618fe688be34503e8",
+      "iso_checksum_type": "sha256",
+      "output_directory": "{{user `output_directory`}}",
+      "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "http",
+      "ssh_username": "{{ user `user` }}",
+      "ssh_password": "{{ user `password` }}",
+      "disk_compression": true,
+      "ssh_host_port_min" : 2222,
+      "ssh_host_port_max" : 4444,
+      "vnc_port_min": 5901,
+      "vnc_port_max": 5901,
+      "http_port_min": 8501,
+      "http_port_max": 8501,
+      "ssh_wait_timeout": "40m",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "vnc_bind_address": "0.0.0.0",
+      "boot_wait": "10s",
+      "boot_command": [
+        "<tab> linux ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-centos-8.cfg <enter><wait>"
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "files/rc.local-centos",
+      "destination": "/tmp/rc.local"
+    },
+    {
+      "type": "file",
+      "source": "files/rc-local-fedora.conf",
+      "destination": "/tmp/rc-local-fedora.conf"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
+      "scripts": [
+        "scripts/packages.sh",
+        "scripts/configure.sh",
+        "scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
