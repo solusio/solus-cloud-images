@@ -1,8 +1,8 @@
-# SOLUS IO OS images builder
+# SolusIO OS images builder
 
-The repository was created by the SOLUS IO team. 
+The repository was created by the SolusIO team. 
 
-SOLUS IO comes with a number of OS images available out of the box.
+SolusIO comes with a number of OS images available out of the box.
 However you may want to build your own custom OS images (with desired parameters, installed packages, OS versions, and so on).
 
 This repository will help you do so. It contains a number of scripts and configs 
