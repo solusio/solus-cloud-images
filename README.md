@@ -34,7 +34,7 @@ Then you need to install Packer by HashiCorp.
 
 1. Download the content of the repository to the management server.
 2. The repository contains directories named after OSes whose images you can build (`centos`, `debian`, `fedora`, and so on).
-   To customize a future OS image, change the content of the `solus-<custom-image-OS>.json` template file in the corresponding directory
+   To customize a future OS image, change the content of the JSON template file in the corresponding directory
    (for example, the `/centos/solus-centos-8.json` file).
 
    Examples of possible changes are below: 
@@ -63,17 +63,19 @@ To use this option, you must also set up the SSH_KEY environment variable with a
 - To clean up the output directory after removing a built OS image, run `./build.sh` with the `--cleanup` option.
 This option may be useful if you transfer using the `--opt_destination` option. After the image was transferred, you may no longer need it in the output directory.
 
-## 5. Troubleshooting.
+## 6. Troubleshooting.
 
-When you have launched the build, we recommend that you to the management server via 
+When you have launched the build, we recommend that you connect to the management server via VNC.
+It will help you monitor the build and promptly see any errors if they occur.
 
-
+**Note:** If Packer cannot find the location of the `qemu-kvm` package during the build, check the `"qemu_binary": "/.../.../qemu-kvm"`
+line in the JSON template and edit the path to `qemu-kvm` if necessary.
 
 ## 5. Checking the result
 
 By default, the `./output` and the `./build` directories will be created during the script execution.
-The `./output` directory will contain the output OS image, while the `./build` directory will contain
-`packer.log`.
+Once the build is finished, you will find the built OS image in the `./output` directory.
+The `./build` directory will contain `packer.log`.
 
 ## Additional information
 
