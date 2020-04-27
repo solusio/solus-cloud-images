@@ -74,8 +74,10 @@ It will help you monitor the build and promptly see any errors if they occur.
 line in the JSON template and edit the path to `qemu-kvm` if necessary.
 
 ![](Img/1.png)
+:scale: 50%
 
 ![](Img/2.png)
+:scale: 50%
 
 ## 6. Getting a built image
 
