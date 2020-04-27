@@ -22,7 +22,7 @@ Check if the management server meets the following requirements:
 **Note:** Commands shown in this section work for the management server on CentOS. If your management server OS is
 Ubuntu or Debian, you may need to use the corresponding Debian-specific commands.
 
-Install Packer by HashiCorp.
+Install Packer by HashiCorp:
 
 1. Access the management server command line via SSH.
 2. Download Packer:
