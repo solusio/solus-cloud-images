@@ -1,111 +1,91 @@
-# SOLUS IO OS images builder
+# SolusIO OS Images Builder
 
-The repository was created by the SOLUS IO team. 
+The repository was created by the SolusIO team. 
 
-SOLUS IO comes with a number of OS images available out of the box.
-However you may want to build your own custom OS images (with desired parameters, installed packages, OS versions, and so on).
+SolusIO comes with a number of OS images available out of the box.
+However you may want to build your custom OS images (with desired parameters, installed packages, OS versions, and so on).
 
 This repository will help you do so. It contains a number of scripts and configs 
 to help you build custom `cloud-init` compatible QEMU/KVM OS images.
 
+**Note:** SolusIO OS Images Builder was tested and it works on CentOS servers.
+We сannot guarantee that it will work on Ubuntu or Debian.
 
-## 1. Installing Packer
+## 1. Checking prerequisites
 
-Firstly, you need to install HashiCorp Packer.
+Check if the server where you want to build the image (or the build server for short) meets the following requirements:
 
-1. Access the management server command line via SSH.
+- Free RAM: minimum 2048 MB (by default)
+- Free HDD space: minimum 10 GB 
+- Installed `qemu-kvm` package
+- Installed Unzip and curl. To install them, run `yum install unzip curl` for CentOS.
+
+## 2. Installing Packer
+
+Install Packer by HashiCorp:
+
+1. Access the build server command line via SSH.
 2. Download Packer:
 
    `curl https://releases.hashicorp.com/packer/1.5.1/packer_1.5.1_linux_amd64.zip`
 
-3. Install Unzip. To do so, run the `apt-get install unzip` or `yum install unzip` command.
 4. Unzip the Packer archive by running the `unzip packer_1.5.1_linux_amd64.zip` command.
 5. Run the `cp packer /usr/sbin/` command to copy the Packer binary to the `/usr/sbin/` directory.
 
-## 2. Checking prerequisites
+## 3. Downloading the repository and customizing the OS image
 
-Check if the management server meets the following requirements:
-
-- Enabled nested virtulization
-- Installed `qemu-kvm` package
-- Free RAM: minimum 2048 MB (by default)
-- Free HDD space: minimum 10 GB 
-
-## 3. Downloading the repository and customizing OS images
-
-1. Download the content of the repository to the management server.
+1. Download the content of the repository to the build server.
 2. The repository contains directories named after OSes whose images you can build (`centos`, `debian`, `fedora`, and so on).
-   To customize a future OS image, change the content of the `solus-<custom-image-OS>.json` file in the corresponding directory
+   To customize a future OS image, change the content of the JSON template file in the corresponding directory
    (for example, the `/centos/solus-centos-8.json` file).
 
    Examples of possible changes are below: 
 
    - To change the allocated memory (and most probably decrease the build time of an OS image),
      change the value of the `-m` parameter in `qemuargs`. 
-   - To change the output OS image name, output directory, or disk size, change the corresponding parameter in the `"variables"` section.
+   - To change the output OS image name, output directory, or disk size, change the corresponding parameter in the `"variables"`         section.
 
    **Note**: The disk size must be larger than the packed image size.
 
    For more information on customizing an OS image, [read the HashiCorp Packer documentation](https://www.packer.io/docs/index.html).
 
-## 4. Building a custom image
+## 4. Building an OS image
 
-Building a custom OS image differs depending on the OS of the management server 
-and the OS of the image that you want to build.
+To start building an OS image, run the following command specifying the image OS as a parameter:
 
-### Debian images
+`./build.sh build debian|fedora|centos-8|windows-2019`
 
-To build a Debian OS image:
+For example, if the image OS is Fedora, run the following command:
 
-1. If the management server OS is CentOS 7, add the following line to the `debian/solus-debian-8.json` file under the `"builders"` section:
+`./build.sh build fedora`
 
-   `"qemu_binary": "/usr/libexec/qemu-kvm",`
+You can also launch some additional actions that will be executed with the build:
 
-   If the management server OS is not CentOS 7, skip this step and go to the next one.
+- To transfer a built OS image to another server via scp, run `./build.sh` with the `--opt_destination` option, for example:
+`./build.sh build fedora --opt_destination=root@10.2.3.4:/`
 
-2. Run `./build.sh build debian`.
+  To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the variable value.
 
-### Fedora images
+- To clean up the output directory after removing a built OS image, run `./build.sh` with the `--cleanup` option.
+This option may be useful if you transfer the image using the `--opt_destination` option. After the image was transferred, you may no longer need it in the output directory.
 
-To build a Fedora OS image:
+## 5. Troubleshooting
 
-1. If the management server OS is CentOS 7, add the following line to the `fedora/solus-fedora-29.json` file under the `"builders"` section:
+When you have launched the build, we recommend that you connect to the build server via VNC.
+It will help you monitor the build and promptly see any errors if they occur.
 
-   `"qemu_binary": "/usr/libexec/qemu-kvm",`
+**Note:** If Packer cannot find the location of the `qemu-kvm` package during the build, check the `"qemu_binary": "/.../.../qemu-kvm"`
+line in the JSON template and edit the path to `qemu-kvm` if necessary.
 
-   If the management server OS is not CentOS 7, skip this step and go to the next one.
+![](images/1.png)
 
-2. Run `./build.sh build fedora`.
+![](images/2.png)
 
-### CentOS images
-
-To build a CentOS OS image:
-
-1. If the management server OS is CentOS 7, add the following line to the `centos/solus-centos-8.json` file under the `"builders"` section:
-
-   `"qemu_binary": "/usr/libexec/qemu-kvm",`
-
-   If the management server OS is not CentOS 7, skip this step and go to the next one.
-
-2. Run `/build.sh build centos-8`.
-
-### Windows images
-
-To build a Windows OS image:
-
-1. If the management server OS is CentOS 7, add the following line to the `windows/windows.json` file under the `"builders"` section:
-
-   `"qemu_binary": "/usr/libexec/qemu-kvm",`
-
-   If the management server OS is not CentOS 7, skip this step and go to the next one.
-
-2. Run `./build.sh build windows-2019`.
-
-## 5. Checking the result
+## 6. Getting a built image
 
 By default, the `./output` and the `./build` directories will be created during the script execution.
-The `./output` directory will contain the output OS image, while the `./build` directory will contain
-`packer.log`.
+Once the build is finished, you will find the built OS image in the `./output` directory.
+The `./build` directory will contain `packer.log`.
 
 ## Additional information
 
