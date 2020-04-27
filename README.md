@@ -65,7 +65,7 @@ You can also launch some additional actions that will be executed with the build
 - To transfer a built OS image to another server via scp, run `./build.sh` with the `--opt_destination` option, for example:
 `./build.sh build fedora --opt_destination=root@10.2.3.4:/`
 
-To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the variable value.
+   To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the        variable value.
 
 - To clean up the output directory after removing a built OS image, run `./build.sh` with the `--cleanup` option.
 This option may be useful if you transfer the image using the `--opt_destination` option. After the image was transferred, you may no longer need it in the output directory.
