@@ -73,9 +73,9 @@ It will help you monitor the build and promptly see any errors if they occur.
 **Note:** If Packer cannot find the location of the `qemu-kvm` package during the build, check the `"qemu_binary": "/.../.../qemu-kvm"`
 line in the JSON template and edit the path to `qemu-kvm` if necessary.
 
-![alt text](https://.../Img/1.bmp)
+![](Img/1.png)
 
-![alt text](https://.../Img/2.bmp)
+![](Img/2.png)
 
 ## 6. Getting a built image
 
