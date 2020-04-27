@@ -3,14 +3,14 @@
 The repository was created by the SolusIO team. 
 
 SolusIO comes with a number of OS images available out of the box.
-However you may want to build your own custom OS images (with desired parameters, installed packages, OS versions, and so on).
+However you may want to build your custom OS images (with desired parameters, installed packages, OS versions, and so on).
 
 This repository will help you do so. It contains a number of scripts and configs 
 to help you build custom `cloud-init` compatible QEMU/KVM OS images.
 
 ## 1. Checking prerequisites
 
-Firstly, check if the management server meets the following requirements:
+Check if the management server meets the following requirements:
 
 - Enabled nested virtulization
 - Installed `qemu-kvm` package
@@ -19,7 +19,10 @@ Firstly, check if the management server meets the following requirements:
 
 ## 2. Installing Packer
 
-Then you need to install Packer by HashiCorp.
+**Note:** Commands shown in this section work for the management server on CentOS. If your management server OS is
+Ubuntu or Debian, you may need to use the corresponding Debian-specific commands.
+
+Install Packer by HashiCorp.
 
 1. Access the management server command line via SSH.
 2. Download Packer:
@@ -49,7 +52,7 @@ Then you need to install Packer by HashiCorp.
 
 ## 4. Building an OS image
 
-To start building an OS image, run the following command specifying the OS of the image as a parameter:
+To start building an OS image, run the following command specifying the image OS as a parameter:
 
 `./build.sh build debian|fedora|centos-8|windows-2019`
 
@@ -59,11 +62,13 @@ For example, if the image OS is Fedora, run the following command:
 
 You can also launch some additional actions that will be executed with the build:
 
-- To transfer a built OS image to another sever via scp, run `./build.sh` with the `--opt_destination` option, for example:
+- To transfer a built OS image to another server via scp, run `./build.sh` with the `--opt_destination` option, for example:
 `./build.sh build fedora --opt_destination=root@10.2.3.4:/`
+
 To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the variable value.
+
 - To clean up the output directory after removing a built OS image, run `./build.sh` with the `--cleanup` option.
-This option may be useful if you transfer using the `--opt_destination` option. After the image was transferred, you may no longer need it in the output directory.
+This option may be useful if you transfer the image using the `--opt_destination` option. After the image was transferred, you may no longer need it in the output directory.
 
 ## 5. Troubleshooting
 
@@ -73,11 +78,9 @@ It will help you monitor the build and promptly see any errors if they occur.
 **Note:** If Packer cannot find the location of the `qemu-kvm` package during the build, check the `"qemu_binary": "/.../.../qemu-kvm"`
 line in the JSON template and edit the path to `qemu-kvm` if necessary.
 
-![](Img/1.png)
-:scale: 50%
+![](images/1.png)
 
-![](Img/2.png)
-:scale: 50%
+![](images/2.png)
 
 ## 6. Getting a built image
 
