@@ -30,7 +30,7 @@ Then you need to install Packer by HashiCorp.
 4. Unzip the Packer archive by running the `unzip packer_1.5.1_linux_amd64.zip` command.
 5. Run the `cp packer /usr/sbin/` command to copy the Packer binary to the `/usr/sbin/` directory.
 
-## 3. Downloading the repository and customizing OS images
+## 3. Downloading the repository and customizing the OS image
 
 1. Download the content of the repository to the management server.
 2. The repository contains directories named after OSes whose images you can build (`centos`, `debian`, `fedora`, and so on).
@@ -50,9 +50,11 @@ Then you need to install Packer by HashiCorp.
 ## 4. Building an OS image
 
 To start building an OS image, run the following command specifying the OS of the image as a parameter:
+
 `./build.sh build debian|fedora|centos-8|windows-2019`
 
 For example, if the image OS is Fedora, run the following command:
+
 `./build.sh build fedora`
 
 You can also launch some additional actions that will be executed with the build:
@@ -63,7 +65,7 @@ To use this option, you must also set up the SSH_KEY environment variable with a
 - To clean up the output directory after removing a built OS image, run `./build.sh` with the `--cleanup` option.
 This option may be useful if you transfer using the `--opt_destination` option. After the image was transferred, you may no longer need it in the output directory.
 
-## 6. Troubleshooting.
+## 5. Troubleshooting
 
 When you have launched the build, we recommend that you connect to the management server via VNC.
 It will help you monitor the build and promptly see any errors if they occur.
@@ -71,7 +73,7 @@ It will help you monitor the build and promptly see any errors if they occur.
 **Note:** If Packer cannot find the location of the `qemu-kvm` package during the build, check the `"qemu_binary": "/.../.../qemu-kvm"`
 line in the JSON template and edit the path to `qemu-kvm` if necessary.
 
-## 5. Checking the result
+## 6. Getting a built image
 
 By default, the `./output` and the `./build` directories will be created during the script execution.
 Once the build is finished, you will find the built OS image in the `./output` directory.
