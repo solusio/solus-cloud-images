@@ -3,14 +3,14 @@
 The repository was created by the SolusIO team. 
 
 SolusIO comes with a number of OS images available out of the box.
-However you may want to build your own custom OS images (with desired parameters, installed packages, OS versions, and so on).
+However you may want to build your custom OS images (with desired parameters, installed packages, OS versions, and so on).
 
 This repository will help you do so. It contains a number of scripts and configs 
 to help you build custom `cloud-init` compatible QEMU/KVM OS images.
 
 ## 1. Checking prerequisites
 
-Firstly, check if the management server meets the following requirements:
+Check if the management server meets the following requirements:
 
 - Enabled nested virtulization
 - Installed `qemu-kvm` package
@@ -19,7 +19,10 @@ Firstly, check if the management server meets the following requirements:
 
 ## 2. Installing Packer
 
-Then you need to install Packer by HashiCorp.
+**Note:** Commands shown in this section work for the management server on CentOS. If your management server OS is
+Ubuntu or Debian, you may need to use the corresponding Debian-specific commands.
+
+Install Packer by HashiCorp.
 
 1. Access the management server command line via SSH.
 2. Download Packer:
@@ -30,7 +33,7 @@ Then you need to install Packer by HashiCorp.
 4. Unzip the Packer archive by running the `unzip packer_1.5.1_linux_amd64.zip` command.
 5. Run the `cp packer /usr/sbin/` command to copy the Packer binary to the `/usr/sbin/` directory.
 
-## 3. Downloading the repository and customizing OS images
+## 3. Downloading the repository and customizing the OS image
 
 1. Download the content of the repository to the management server.
 2. The repository contains directories named after OSes whose images you can build (`centos`, `debian`, `fedora`, and so on).
@@ -49,21 +52,25 @@ Then you need to install Packer by HashiCorp.
 
 ## 4. Building an OS image
 
-To start building an OS image, run the following command specifying the OS of the image as a parameter:
+To start building an OS image, run the following command specifying the image OS as a parameter:
+
 `./build.sh build debian|fedora|centos-8|windows-2019`
 
 For example, if the image OS is Fedora, run the following command:
+
 `./build.sh build fedora`
 
 You can also launch some additional actions that will be executed with the build:
 
-- To transfer a built OS image to another sever via scp, run `./build.sh` with the `--opt_destination` option, for example:
+- To transfer a built OS image to another server via scp, run `./build.sh` with the `--opt_destination` option, for example:
 `./build.sh build fedora --opt_destination=root@10.2.3.4:/`
-To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the variable value.
-- To clean up the output directory after removing a built OS image, run `./build.sh` with the `--cleanup` option.
-This option may be useful if you transfer using the `--opt_destination` option. After the image was transferred, you may no longer need it in the output directory.
 
-## 6. Troubleshooting.
+To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the variable value.
+
+- To clean up the output directory after removing a built OS image, run `./build.sh` with the `--cleanup` option.
+This option may be useful if you transfer the image using the `--opt_destination` option. After the image was transferred, you may no longer need it in the output directory.
+
+## 5. Troubleshooting
 
 When you have launched the build, we recommend that you connect to the management server via VNC.
 It will help you monitor the build and promptly see any errors if they occur.
@@ -71,7 +78,11 @@ It will help you monitor the build and promptly see any errors if they occur.
 **Note:** If Packer cannot find the location of the `qemu-kvm` package during the build, check the `"qemu_binary": "/.../.../qemu-kvm"`
 line in the JSON template and edit the path to `qemu-kvm` if necessary.
 
-## 5. Checking the result
+![](images/1.png)
+
+![](images/2.png)
+
+## 6. Getting a built image
 
 By default, the `./output` and the `./build` directories will be created during the script execution.
 Once the build is finished, you will find the built OS image in the `./output` directory.
