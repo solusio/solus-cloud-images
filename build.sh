@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 ### Copyright 2020 Plesk International GmbH. All rights reserved.
 
 set -euo pipefail
@@ -40,8 +40,8 @@ usage() {
 		    centos-8                    CentOS 8 images
 		    windows-2019                Windows images
 
-        Options:
-            --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
+    Options:
+        --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
 		    --opt_destination=          Transfers a built OS image to another sever via scp, for example: root@10.2.3.4:/. To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the variable value.
 		EOT
   exit 2
