@@ -1,0 +1,22 @@
+#!/bin/bash
+
+clear_user(){
+	for user in ubuntu; do
+		userdel --force --remove "$user" || passwd -l "$user" || true
+		rm -rf "/home/$user/"
+	done
+	passwd -d root
+}
+
+clean_up(){
+	rm -rf /lib/systemd/system/rc-local.service.d
+	rm -rf /etc/rc.local
+	rm -rf /etc/subgid.lock
+}
+
+clear_user
+
+cloud-init init # to generate host ssh keys
+cloud-init modules --mode=config
+cloud-init modules --mode=final
+clean_up
