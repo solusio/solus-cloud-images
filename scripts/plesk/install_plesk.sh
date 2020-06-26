@@ -59,16 +59,10 @@ plesk_install()
 
 	## Init panel and install default key to get the posiblity to configure some extensions like f2b, mod_security etc..
 	plesk bin init_conf --init
-	testkey_install
-}
 
-install_master_key()
-{
-	keypath='/tmp/plesk_master.key'
-	if [ -f "$keypath" ]; then
-		plesk bin license -i "$keypath"
-		rm -f "$keypath"
-	fi
+	## Use Plesk temporary license key if you want to enable modsecurity and fail2ban features
+	# This key will be deleted at the end
+	tempkey_install
 }
 
 modsecurity_install()
@@ -122,22 +116,30 @@ extensions_install()
 	done
 }
 
-# test license key is required to enable modsecurity and fail2ban features
-testkey_install()
+# temporary license key is required to enable modsecurity and fail2ban features
+tempkey_install()
 {
+  if [ ! -f /tmp/plesk-temporary-key.xml ]; then
+    return 0
+  fi
+
 	# save swkeys data
 	rsync -avr /etc/sw/keys/ /etc/sw/keys.saved
 	cat >> /usr/local/psa/admin/conf/panel.ini <<-EOT
 	[ext-catalog]
 	extensionAutoInstall = false
 	EOT
-	plesk bin license -i /tmp/plesk-test-key.xml
-	rm -f /tmp/plesk-test-key.xml
+	plesk bin license -i /tmp/plesk-temporary-key.xml
+	rm -f /tmp/plesk-temporary-key.xml
 }
 
-# Rollback test license key
-testkey_rollback()
+# Rollback temporary license key
+tempkey_rollback()
 {
+  if [ ! -d /etc/sw/keys.saved ]; then
+    return 0
+  fi
+
 	mv -f /etc/sw/keys /etc/sw/keys.tmp
 	mv -f /etc/sw/keys.saved /etc/sw/keys
 	rm -rf /etc/sw/keys.tmp || true
@@ -165,7 +167,7 @@ do_prepare
 case ${instance_type}_${install_type} in
 
 	solus_byol)
-		plesk_install "" ""
+		plesk_install "$INSTALL_WITH_PLESK_COMPONENTS" "$INSTALL_WITHOUT_PLESK_COMPONENTS"
 	;;
 
 	*)
@@ -174,7 +176,7 @@ case ${instance_type}_${install_type} in
 	;;
 esac
 
-testkey_rollback
+tempkey_rollback
 
 echo "solusio" > $psa_d/var/cloud_id
 /usr/local/psa/admin/sbin/nginxmng -d

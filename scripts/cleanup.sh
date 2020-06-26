@@ -24,7 +24,7 @@ clean_garbage()
 
 	echo "==> Cleaning up leftover dhcp leases"
 	if [[ -d "/var/lib/dhcp" ]]; then
-		rm /var/lib/dhcp/*
+		rm -rf /var/lib/dhcp
 	fi
 
 	# Clean /tmp

@@ -27,7 +27,7 @@
       "iso_checksum_type": "sha256",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'ubuntu' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "http",
+      "http_directory": "ubuntu/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -62,33 +62,18 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "files/rc.local-ubuntu",
+      "source": "ubuntu/files/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "files/rc-local-ubuntu.conf",
+      "source": "ubuntu/files/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
-    },
-    {
-      "type": "file",
-      "source": "build/plesk-test-key.xml",
-      "destination": "/tmp/plesk-test-key.xml"
     },
     {
       "type": "file",
       "source": "files/plesk/pleskswaprc",
       "destination": "/tmp/pleskswaprc"
-    },
-    {
-      "type": "shell",
-      "expect_disconnect": true,
-      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
-      "script": "scripts/plesk/install_plesk.sh",
-      "environment_vars": [
-        "IS_SOLUS=true",
-        "INSTALL_BYOL=true"
-      ]
     },
     {
       "type": "file",
@@ -97,9 +82,21 @@
     },
     {
       "type": "shell",
+      "expect_disconnect": true,
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "scripts/plesk/install_plesk.sh",
+      "environment_vars": [
+        "IS_SOLUS=true",
+        "INSTALL_BYOL=true",
+        "INSTALL_WITH_PLESK_COMPONENTS=",
+        "INSTALL_WITHOUT_PLESK_COMPONENTS="
+      ]
+    },
+    {
+      "type": "shell",
       "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
-        "scripts/plesk/packages.sh",
+        "ubuntu/packages.sh",
         "scripts/configure.sh",
         "scripts/plesk/configure.sh",
         "scripts/plesk/cleanup.sh"

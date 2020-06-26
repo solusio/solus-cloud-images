@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 ### Copyright 2020 Plesk International GmbH. All rights reserved.
 
 set -euo pipefail
@@ -82,7 +82,7 @@ get_host_val()
 packer_build() {
   local cfg="$1"
 
-  PACKER_LOG=1 packer build $1 || die "check for details build/packer.log"
+  PACKER_LOG=1 ./packer build $1 || die "check for details build/packer.log"
 
   return 0
 }
@@ -90,7 +90,7 @@ packer_build() {
 do_build() {
   rm -rf ./build
   mkdir -p ./build
-
+  git rev-parse HEAD >./build/revision
   local inten=
   local config=
 
@@ -117,6 +117,18 @@ do_build() {
     inten="Build centos 8 cloud-init image"
     config="centos/solus-centos-8.json"
     image_path="output/centos"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  ubuntu-18)
+    inten="Build ubuntu 18 cloud-init image"
+    config="ubuntu/solus-ubuntu-18.json"
+    image_path="output/ubuntu"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  ubuntu-18-plesk)
+    inten="Build ubuntu 18 cloud-init image with plesk"
+    config="ubuntu/solus-ubuntu-18-plesk.json"
+    image_path="output/ubuntu"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
   windows-2019)
@@ -185,7 +197,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="alpine debian fedora centos-8 windows-2019"
+image_types_allowed="alpine centos-8 debian fedora ubuntu-18 ubuntu-18-plesk windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
