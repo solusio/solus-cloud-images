@@ -4,30 +4,11 @@ set -euxo pipefail
 
 clean_garbage()
 {
-	# Clean package manager caches
-	if [[ -f "/usr/bin/apt-get" ]]; then
-		if ! apt-get clean; then
-			sleep 120
-			apt-get clean
-		fi
-		rm -rf /var/lib/apt/lists/*
-	fi
+  sed -i 's/dhcp/manual/g' /etc/network/interfaces
 
-	if [[ -f "/usr/bin/yum" ]]; then
-		yum clean all
-		rm -rf /var/cache/yum /var/tmp/yum-*
-	fi
+  rm -rf /var/cache/apk/*
 
-	if [[ -f "/usr/bin/dnf" ]]; then
-		dnf clean all
-	fi
-
-	echo "==> Cleaning up leftover dhcp leases"
-	if [[ -d "/var/lib/dhcp" ]]; then
-		rm -rf /var/lib/dhcp
-	fi
-
-	# Clean /tmp
+  # Clean /tmp
 	rm -rf /tmp/*
 
 	# Clean SSH Host Key Pairs
@@ -46,6 +27,7 @@ clean_garbage()
 
 	# Clean evidences of your activity
 	echo -n > /root/.bash_history
+
 }
 
 clean_garbage

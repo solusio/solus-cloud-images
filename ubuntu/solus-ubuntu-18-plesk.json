@@ -1,0 +1,109 @@
+{
+  "variables": {
+    "user": "ubuntu",
+    "password": "ubuntu",
+    "disk_size": "9000",
+    "output_directory": "output/ubuntu",
+    "output_image_name": "solus-io-ubuntu-18-plesk"
+  },
+  "builders": [
+    {
+      "name": "solus.io",
+      "vm_name": "{{user `output_image_name`}}.qcow2",
+      "type": "qemu",
+      "qemu_binary": "/usr/libexec/qemu-kvm",
+      "qemuargs": [
+        [
+          "-m",
+          "2000m"
+        ]
+      ],
+      "format": "qcow2",
+      "headless": true,
+      "accelerator": "kvm",
+      "disk_size": "{{ user `disk_size` }}",
+      "iso_url": "http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso",
+      "iso_checksum": "bed8a55ae2a657f8349fe3271097cff3a5b8c3d1048cf258568f1601976fa30d",
+      "iso_checksum_type": "sha256",
+      "output_directory": "{{user `output_directory`}}",
+      "shutdown_command": "echo 'ubuntu' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "ubuntu/http",
+      "ssh_username": "{{ user `user` }}",
+      "ssh_password": "{{ user `password` }}",
+      "disk_compression": true,
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 4444,
+      "vnc_port_min": 5901,
+      "vnc_port_max": 6000,
+      "http_port_min": 8501,
+      "http_port_max": 8501,
+      "ssh_wait_timeout": "40m",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "vnc_bind_address": "0.0.0.0",
+      "boot_wait": "10s",
+      "boot_command": [
+        "<esc><wait><wait><wait>",
+        "install initrd=/install/initrd.gz ",
+        "auto=true ",
+        "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-ubuntu-18.cfg<wait> ",
+        "language=en ",
+        "country=US ",
+        "locale=en_US.UTF-8 ",
+        "hostname=localhost ",
+        "domain=localdomain ",
+        "interface=auto ",
+        "console-setup/ask_detect=false ",
+        "keyboard-configuration/layoutcode=us ",
+        "vga=788 noprompt quiet --<enter>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "ubuntu/files/rc.local",
+      "destination": "/tmp/rc.local"
+    },
+    {
+      "type": "file",
+      "source": "ubuntu/files/rc-local.conf",
+      "destination": "/tmp/rc-local.conf"
+    },
+    {
+      "type": "file",
+      "source": "files/plesk/pleskswaprc",
+      "destination": "/tmp/pleskswaprc"
+    },
+    {
+      "type": "file",
+      "source": "build/revision",
+      "destination": "/tmp/.image-revision"
+    },
+    {
+      "type": "shell",
+      "expect_disconnect": true,
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "scripts/plesk/install_plesk.sh",
+      "environment_vars": [
+        "IS_SOLUS=true",
+        "INSTALL_BYOL=true",
+        "INSTALL_PLESK_VERSION=18.0.28",
+        "INSTALL_PLESK_PRESET=Recommended",
+        "INSTALL_WITH_PLESK_COMPONENTS=",
+        "INSTALL_WITHOUT_PLESK_COMPONENTS=",
+        "PLESK_TEMPORARY_LICENSE_KEY="
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
+      "scripts": [
+        "ubuntu/packages.sh",
+        "scripts/configure.sh",
+        "scripts/plesk/configure.sh",
+        "scripts/plesk/cleanup.sh"
+      ]
+    }
+  ]
+}

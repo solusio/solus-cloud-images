@@ -17,33 +17,34 @@ step() {
 trap 'cleanup' EXIT
 
 cleanup() {
-    if [[ -f "./test_private_key" ]]; then
-        rm test_private_key
-    fi
-    if [[ -n "$opt_cleanup" ]]; then
-		rm -rf output/
+  if [[ -f "./test_private_key" ]]; then
+    rm test_private_key
+  fi
+  if [[ -n "$opt_cleanup" ]]; then
+    rm -rf output/
 	fi
 }
 
 usage() {
   cat <<-EOT
-		Usage:
-			$0 <action> <image type> [options]
-			$0 build <image type>
+    Usage:
+      $0 <action> <image type> [options]
+      $0 build <image type>
 
-		Actions:
-			build         Executes Packer to build the specified OS image.
+    Actions:
+      build         Executes Packer to build the specified OS image.
 
-		Supported OS images:
-		    debian                      Debian  images
-		    fedora                      Fedora  images
-		    centos-8                    CentOS 8 images
-		    windows-2019                Windows images
+    Supported OS images:
+      debian                      Debian  images
+      fedora                      Fedora  images
+      centos-8                    CentOS 8 images
+      windows-2019                Windows images
+      alpine                      Alpine images
 
-        Options:
-            --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
-		    --opt_destination=          Transfers a built OS image to another sever via scp, for example: root@10.2.3.4:/. To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the variable value.
-		EOT
+    Options:
+      --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
+      --opt_destination=          Transfers a built OS image to another sever via scp, for example: root@10.2.3.4:/. To use this option, you must also set up the SSH_KEY environment variable with a private SSH key of the destination server as the variable value.
+EOT
   exit 2
 }
 
@@ -70,12 +71,12 @@ get_arg() {
 
 get_opt_val()
 {
-    echo "$*"|awk -F '=' '{print $2}'
+  echo "$*"|awk -F '=' '{print $2}'
 }
 
 get_host_val()
 {
-    echo "$opt_destination"|awk -F ':' '{print $1}'
+  echo "$opt_destination"|awk -F ':' '{print $1}'
 }
 
 packer_build() {
@@ -89,11 +90,17 @@ packer_build() {
 do_build() {
   rm -rf ./build
   mkdir -p ./build
-
+  git rev-parse HEAD >./build/revision
   local inten=
   local config=
 
   case "$opt_type" in
+  alpine)
+    inten="Build alpine cloud-init image"
+    config="alpine/solus-alpine.json"
+    image_path="output/alpine"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
   debian)
     inten="Build debian 8 cloud-init image"
     config="debian/solus-debian-8.json"
@@ -110,6 +117,18 @@ do_build() {
     inten="Build centos 8 cloud-init image"
     config="centos/solus-centos-8.json"
     image_path="output/centos"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  ubuntu-18)
+    inten="Build ubuntu 18 cloud-init image"
+    config="ubuntu/solus-ubuntu-18.json"
+    image_path="output/ubuntu"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  ubuntu-18-plesk)
+    inten="Build ubuntu 18 cloud-init image with plesk"
+    config="ubuntu/solus-ubuntu-18-plesk.json"
+    image_path="output/ubuntu"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
   windows-2019)
@@ -149,23 +168,23 @@ do_transfer()
 
 do_ssh_connection_check()
 {
-    if [[ -z "${SSH_KEY}" ]]; then
-        echo "Provide the SSH private key."
-        exit 1
-    fi
-    if [[ -f "./test_private_key" ]]; then
-        rm test_private_key
-    fi
-    echo "${SSH_KEY}" > test_private_key
-    chmod 600 test_private_key
-    destination="`get_host_val`"
-    ssh -i test_private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$destination"
-    retVal=$?
-    if [[ ! ${retVal} -eq 0 ]]; then
-        echo "can't connect to ${destination} with next private key:\n ${SSH_KEY}"
-        exit 1
-    fi
-    exit
+  if [[ -z "${SSH_KEY}" ]]; then
+      echo "Provide the SSH private key."
+      exit 1
+  fi
+  if [[ -f "./test_private_key" ]]; then
+      rm test_private_key
+  fi
+  echo "${SSH_KEY}" > test_private_key
+  chmod 600 test_private_key
+  destination="`get_host_val`"
+  ssh -i test_private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$destination"
+  retVal=$?
+  if [[ ! ${retVal} -eq 0 ]]; then
+      echo "can't connect to ${destination} with next private key:\n ${SSH_KEY}"
+      exit 1
+  fi
+  exit
 }
 
 [[ $# -eq 0 ]] && usage
@@ -178,7 +197,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="debian fedora centos-8 windows-2019"
+image_types_allowed="alpine centos-8 debian fedora ubuntu-18 ubuntu-18-plesk windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
@@ -202,25 +221,25 @@ if [[ "$opt_command" != "test" ]]; then
 fi
 
 while [[ "$#" -gt 0 ]]; do
-    case "$1" in
-        -h | --help)
-        usage
-        ;;
-        --destination=*)
-            opt_destination="`get_opt_val $1`"
-            do_ssh_connection_check
-            shift
-            ;;
-        --cleanup)
-            opt_cleanup="yes"
-            shift
-            ;;
-        *)
-        echo "An unknown option: $1"
-        echo
-        usage
-        ;;
-    esac
+  case "$1" in
+    -h | --help)
+    usage
+    ;;
+    --destination=*)
+      opt_destination="`get_opt_val $1`"
+      do_ssh_connection_check
+      shift
+      ;;
+    --cleanup)
+      opt_cleanup="yes"
+      shift
+      ;;
+    *)
+    echo "An unknown option: $1"
+    echo
+    usage
+    ;;
+  esac
 done
 
 # --- action ---

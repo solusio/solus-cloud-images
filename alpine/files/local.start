@@ -1,0 +1,31 @@
+#!/bin/bash
+
+grow_partition(){
+    if [[ -e /dev/vda1 ]]; then
+        growpart /dev/vda 1
+    fi
+    if [[ -e /dev/sda1 ]]; then
+        growpart /dev/sda 1
+    fi
+    reboot
+}
+clear_user(){
+	for user in alpine; do
+		userdel --force --remove "$user" || passwd -l "$user" || true
+		rm -rf "/home/$user/"
+	done
+	passwd -d root
+}
+
+clean_up(){
+    rc-update del local default
+    rc-service local stop
+	rm -rf /etc/local.d/
+	rc-update add cloud-init boot
+}
+
+clear_user
+
+clean_up
+
+grow_partition

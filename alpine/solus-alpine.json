@@ -1,0 +1,106 @@
+{
+  "variables": {
+    "user": "alpine",
+    "password": "alpine",
+    "disk_size": "300",
+    "output_directory": "output/alpine",
+    "output_image_name": "solus.io-alpine"
+  },
+
+  "builders": [
+    {
+      "name": "solus.io",
+      "vm_name": "{{user `output_image_name`}}.qcow2",
+      "type": "qemu",
+      "qemu_binary": "/usr/libexec/qemu-kvm",
+      "qemuargs": [
+        [ "-m", "1900m" ]
+      ],
+      "format": "qcow2",
+      "headless": true,
+      "accelerator": "kvm",
+      "disk_size": "{{ user `disk_size` }}",
+      "iso_url": "http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86_64/alpine-virt-3.12.0-x86_64.iso",
+      "iso_checksum": "fe694a34c0e2d30b9e5dea7e2c1a3892c1f14cb474b69cc5c557a52970071da5",
+      "iso_checksum_type": "sha256",
+      "output_directory": "{{user `output_directory`}}",
+      "shutdown_command": "echo 'alpine' | sudo -S /sbin/poweroff",
+      "http_directory": "alpine/http",
+      "ssh_username": "{{ user `user` }}",
+      "ssh_password": "{{ user `password` }}",
+      "disk_compression": true,
+      "ssh_host_port_min" : 2222,
+      "ssh_host_port_max" : 4444,
+      "vnc_port_min": 5901,
+      "vnc_port_max": 6000,
+      "http_port_min": 8501,
+      "http_port_max": 8501,
+      "ssh_wait_timeout": "40m",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "vnc_bind_address": "0.0.0.0",
+      "boot_wait": "30s",
+      "boot_command": [
+        "root<enter><wait>",
+        "ifconfig eth0 up && udhcpc -i eth0<enter><wait10>",
+        "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/interfaces<enter><wait>",
+        "fdisk /dev/vda<enter><wait>",
+        "n<enter><wait>",
+        "p<enter><wait>",
+        "1<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "a<enter><wait>",
+        "1<enter><wait>",
+        "w<enter><wait>",
+        "setup-alpine -q<enter><wait>",
+        "us<enter><wait>",
+        "us<enter><wait10><wait10>",
+        "apk add --no-cache e2fsprogs<enter><wait10>",
+        "mkfs.ext4 /dev/vda1<enter><wait5>",
+        "modprobe ext4<enter><wait5>",
+        "setup-bootable /media/cdrom /dev/vda1<enter><wait10>",
+        "setup-hostname -n localhost<enter><wait>",
+        "mv interfaces /etc/network/interfaces<enter><wait>",
+        "passwd root<enter><wait>",
+        "{{user `password`}}<enter><wait>",
+        "{{user `password`}}<enter><wait>",
+        "setup-timezone -z UTC<enter><wait>",
+        "setup-sshd -c openssh<enter><wait>",
+        "mount -t ext4 /dev/vda1 /mnt<enter><wait>",
+        "setup-disk /mnt<enter><wait10>",
+        "<wait10><wait10>",
+        "<wait10><wait10>",
+        "<wait10><wait10>",
+        "reboot<enter>",
+        "<wait10><wait10><wait10>",
+        "root<enter><wait>",
+        "{{user `password`}}<enter>",
+        "apk add sudo<enter><wait5>",
+        "apk add bash<enter><wait5>",
+        "echo '%wheel ALL=(ALL) ALL' >> /etc/sudoers.d/wheel<enter>",
+        "adduser {{user `user`}}<enter>",
+        "{{user `password`}}<enter>",
+        "{{user `password`}}<enter>",
+        "adduser {{user `user`}} wheel<enter>"
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "alpine/files/local.start",
+      "destination": "/tmp/local.start"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
+      "scripts": [
+        "alpine/scripts/packages.sh",
+        "alpine/scripts/configure.sh",
+        "alpine/scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
