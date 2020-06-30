@@ -26,7 +26,6 @@ clean_garbage()
 	# Clean SSH Host Key Pairs
 	rm -rf /etc/ssh/*_key /etc/ssh/*_key.pub
 
-
 	if [ -d /root/.ssh ]; then
 		# Clean keys for root user
 		rm -f /root/.ssh/authorized_keys
@@ -34,6 +33,9 @@ clean_garbage()
 		echo -n > /root/.ssh/known_hosts
 		chmod 0644 /root/.ssh/known_hosts
 	fi
+
+  # Lock root password
+  passwd -l root
 
 	# Clean some logfiles and welcome message
 	echo -n > /var/log/maillog
@@ -46,7 +48,6 @@ clean_garbage()
 	# remove swap file configuration
 	rm -f /etc/pleskswaprc
 
-	# DO requirements
 	local logfiles="alternatives.log auth.log bootstrap.log dpkg.log fontconfig.log kern.log mail.log cloud-init.log cloud-init-output.log php7.2-fpm.log"
 	for f in $logfiles; do
 		[ ! -f "/var/log/$f" ] || rm -f /var/log/$f

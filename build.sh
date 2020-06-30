@@ -113,9 +113,21 @@ do_build() {
     image_path="output/fedora"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
+  centos-7-plesk)
+    inten="Build centos 7 cloud-init image with Plesk"
+    config="centos/solus-centos-7-plesk.json"
+    image_path="output/centos"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
   centos-8)
     inten="Build centos 8 cloud-init image"
     config="centos/solus-centos-8.json"
+    image_path="output/centos"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  centos-8-plesk)
+    inten="Build centos 8 cloud-init image"
+    config="centos/solus-centos-8-plesk.json"
     image_path="output/centos"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -197,7 +209,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="alpine centos-8 debian fedora ubuntu-18 ubuntu-18-plesk windows-2019"
+image_types_allowed="alpine centos-7-plesk centos-8 centos-8-plesk debian fedora ubuntu-18 ubuntu-18-plesk windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"

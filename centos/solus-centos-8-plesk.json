@@ -2,9 +2,9 @@
   "variables": {
     "user": "centos",
     "password": "centos",
-    "disk_size": "4000",
+    "disk_size": "6000",
     "output_directory": "output/centos",
-    "output_image_name": "solus-io-centos-8"
+    "output_image_name": "solus-io-centos-8-plesk"
   },
 
   "builders": [
@@ -58,12 +58,38 @@
       "destination": "/tmp/rc-local.conf"
     },
     {
+      "type": "file",
+      "source": "files/plesk/pleskswaprc",
+      "destination": "/tmp/pleskswaprc"
+    },
+    {
+      "type": "shell",
+      "expect_disconnect": true,
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "scripts/plesk/install_plesk.sh",
+      "environment_vars": [
+        "IS_SOLUS=true",
+        "INSTALL_BYOL=true",
+        "INSTALL_PLESK_VERSION=18.0.28",
+        "INSTALL_PLESK_PRESET=Recommended",
+        "INSTALL_WITH_PLESK_COMPONENTS=",
+        "INSTALL_WITHOUT_PLESK_COMPONENTS=",
+        "PLESK_TEMPORARY_LICENSE_KEY="
+      ]
+    },
+    {
+      "type": "file",
+      "source": "build/revision",
+      "destination": "/tmp/.image-revision"
+    },
+    {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "centos/scripts/packages.sh",
         "scripts/configure.sh",
-        "scripts/cleanup.sh"
+        "scripts/plesk/configure.sh",
+        "scripts/plesk/cleanup.sh"
       ]
     }
   ]

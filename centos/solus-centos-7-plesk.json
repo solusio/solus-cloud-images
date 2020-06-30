@@ -2,11 +2,10 @@
   "variables": {
     "user": "centos",
     "password": "centos",
-    "disk_size": "4000",
+    "disk_size": "5000",
     "output_directory": "output/centos",
-    "output_image_name": "solus-io-centos-8"
+    "output_image_name": "solus-io-centos-7-plesk"
   },
-
   "builders": [
     {
       "name": "solus.io",
@@ -14,14 +13,17 @@
       "type": "qemu",
       "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
-        [ "-m", "1900m" ]
+        [
+          "-m",
+          "2000m"
+        ]
       ],
       "format": "qcow2",
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://mirror.yandex.ru/centos/8/isos/x86_64/CentOS-8.2.2004-x86_64-dvd1.iso",
-      "iso_checksum": "c87a2d81d67bbaeaf646aea5bedd70990078ec252fc52f5a7d65ff609871e255",
+      "iso_url": "https://mirror.yandex.ru/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-2003.iso",
+      "iso_checksum": "087a5743dc6fd6706d9b961b8147423ddc029451b938364c760d75440eb7be14",
       "iso_checksum_type": "sha256",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
@@ -29,8 +31,8 @@
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
-      "ssh_host_port_min" : 2222,
-      "ssh_host_port_max" : 4444,
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 4444,
       "vnc_port_min": 5901,
       "vnc_port_max": 6000,
       "http_port_min": 8501,
@@ -41,11 +43,10 @@
       "vnc_bind_address": "0.0.0.0",
       "boot_wait": "10s",
       "boot_command": [
-        "<tab> linux ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-centos-8.cfg <enter><wait>"
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos-7.cfg<enter><wait>"
       ]
     }
   ],
-
   "provisioners": [
     {
       "type": "file",
@@ -58,12 +59,38 @@
       "destination": "/tmp/rc-local.conf"
     },
     {
+      "type": "file",
+      "source": "files/plesk/pleskswaprc",
+      "destination": "/tmp/pleskswaprc"
+    },
+    {
       "type": "shell",
-      "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
+      "expect_disconnect": true,
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "scripts/plesk/install_plesk.sh",
+      "environment_vars": [
+        "IS_SOLUS=true",
+        "INSTALL_BYOL=true",
+        "INSTALL_PLESK_VERSION=18.0.28",
+        "INSTALL_PLESK_PRESET=Recommended",
+        "INSTALL_WITH_PLESK_COMPONENTS=",
+        "INSTALL_WITHOUT_PLESK_COMPONENTS=",
+        "PLESK_TEMPORARY_LICENSE_KEY="
+      ]
+    },
+    {
+      "type": "file",
+      "source": "build/revision",
+      "destination": "/tmp/.image-revision"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
         "centos/scripts/packages.sh",
         "scripts/configure.sh",
-        "scripts/cleanup.sh"
+        "scripts/plesk/configure.sh",
+        "scripts/plesk/cleanup.sh"
       ]
     }
   ]

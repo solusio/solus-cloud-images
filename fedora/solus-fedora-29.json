@@ -54,7 +54,7 @@
 		{
 			"type": "file",
 			"source": "files/rc-local-fedora.conf",
-			"destination": "/tmp/rc-local-fedora.conf"
+			"destination": "/tmp/rc-local.conf"
 		},
 		{
 			"type": "shell",

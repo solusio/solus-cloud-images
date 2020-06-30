@@ -5,7 +5,6 @@ clear_user(){
 		userdel --force --remove "$user" || passwd -l "$user" || true
 		rm -rf "/home/$user/"
 	done
-	passwd -d root
 }
 
 clean_up(){
