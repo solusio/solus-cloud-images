@@ -5,6 +5,7 @@ set -euxo pipefail
 PACKAGES="
 cloud-init
 cloud-utils-growpart
+qemu-guest-agent
 "
 if [[ -f "/usr/bin/apt-get" ]]; then
   apt-get install -y --no-install-recommends ${PACKAGES}
@@ -16,3 +17,5 @@ if [[ -f "/usr/bin/dnf" ]]; then
   dnf -y install ${PACKAGES}
   systemctl enable cloud-init.service
 fi
+
+systemctl enable qemu-guest-agent

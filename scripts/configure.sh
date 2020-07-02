@@ -12,7 +12,7 @@ configure() {
     mkdir -p /lib/systemd/system/rc-local.service.d
     mv -f /tmp/rc-local.conf /lib/systemd/system/rc-local.service.d/rc-local-afters.conf
   elif [[ -f "/usr/bin/dnf" ]] || [[ -f "/usr/bin/yum" ]]; then
-    mv -f /tmp/rc-local-fedora.conf /etc/systemd/system/rc-local.service
+    mv -f /tmp/rc-local.conf /etc/systemd/system/rc-local.service
   fi
 }
 
