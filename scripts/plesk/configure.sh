@@ -23,7 +23,8 @@ configure_image()
 
 	[ ! -f "/tmp/plesk_site_preview.conf" ] || mv -f /tmp/plesk_site_preview.conf /etc/sw-cp-server/conf.d/plesk_site_preview.conf
 
-	# Default server page
+	# Decrease password strength
+	plesk bin server_pref -u -min_password_strength very_weak
 
 	# Prepare image for cloning
 	plesk bin cloning -u -prepare-public-image true -reset-license true -reset-init-conf true -skip-update true -update-master-key "${UPDATE_MASTER_KEY:-false}" -maintenance true
