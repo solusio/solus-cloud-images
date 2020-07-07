@@ -16,25 +16,33 @@ We сannot guarantee that it will work on Ubuntu or Debian.
 Check if the server where you want to build the image (or the build server for short) meets the following requirements:
 
 - Free RAM: minimum 2048 MB (by default)
-- Free HDD space: minimum 10 GB 
-- Installed `qemu-kvm` package
-- Installed Unzip and curl. To install them, run `yum install unzip curl` for CentOS.
+- Free HDD space: minimum 10 GB
+- Packages: `qemu-kvm`, `qemu-system-*` (available in epel repo on CentOS 7 only), `unzip`, `curl`, `git`
+
+  To install them, run the following commands (on CentOS):
+  
+  `yum -y install epel-release`
+  
+  `yum -y install qemu-kvm qemu-system-* unzip curl git`
 
 ## 2. Installing Packer
 
 Install Packer by HashiCorp:
 
 1. Access the build server command line via SSH.
-2. Download Packer:
+2. Download the [latest Packer](https://releases.hashicorp.com/packer/):
 
-   `curl https://releases.hashicorp.com/packer/1.5.1/packer_1.5.1_linux_amd64.zip`
+   `curl https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_linux_amd64.zip -o packer.zip`
 
-4. Unzip the Packer archive by running the `unzip packer_1.5.1_linux_amd64.zip` command.
-5. Run the `cp packer /usr/sbin/` command to copy the Packer binary to the `/usr/sbin/` directory.
+4. Unzip the Packer archive by running the `unzip packer.zip` command.
+5. Run the `yes | cp packer /usr/sbin/` command to copy the Packer binary to the `/usr/sbin/` directory.
 
 ## 3. Downloading the repository and customizing the OS image
 
-1. Download the content of the repository to the build server.
+1. Download the content of the repository to the build server:
+
+   `git clone https://github.com/plesk/solus-cloud-images.git && cd solus-cloud-images`
+
 2. The repository contains directories named after OSes whose images you can build (`centos`, `debian`, `fedora`, and so on).
    To customize a future OS image, change the content of the JSON template file in the corresponding directory
    (for example, the `/centos/solus-centos-8.json` file).
