@@ -27,7 +27,7 @@ Install Packer by HashiCorp:
 1. Access the build server command line via SSH.
 2. Download Packer:
 
-   `curl https://releases.hashicorp.com/packer/1.5.1/packer_1.5.1_linux_amd64.zip`
+   `curl -k https://releases.hashicorp.com/packer/1.5.1/packer_1.5.1_linux_amd64.zip --output packer_1.5.1_linux_amd64.zip`
 
 4. Unzip the Packer archive by running the `unzip packer_1.5.1_linux_amd64.zip` command.
 5. Run the `cp packer /usr/sbin/` command to copy the Packer binary to the `/usr/sbin/` directory.
@@ -47,7 +47,7 @@ Install Packer by HashiCorp:
 
    **Note**: The disk size must be larger than the packed image size.
 
-   For more information on customizing an OS image, [read the HashiCorp Packer documentation](https://www.packer.io/docs/index.html).
+   For more information on customizing an OS image, [read the HashiCorp Packer documentation](https://www.packer.io/docs/builders/qemu).
 
 ## 4. Building an OS image
 
