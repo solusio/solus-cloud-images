@@ -63,6 +63,11 @@
   ],
   "provisioners": [
     {
+      "type": "file",
+      "source": "./viodrv",
+      "destination": "c:/Windows/Temp"
+    },
+    {
       "scripts": [
         "scripts/windows/debloat-windows.ps1"
       ],
