@@ -4,7 +4,7 @@
     "password": "clouduser",
     "disk_size": "12000",
     "output_directory": "output/windows",
-    "output_image_name": "solus.io-window-server-2019",
+    "output_image_name": "solus.io-windows-server-2019",
     "name": "windows-server-2019-standard-x64-eval",
     "cpus": "2",
     "memory": "4096",
@@ -57,14 +57,16 @@
       "disk_size": "{{ user `disk_size` }}",
       "floppy_files": [
         "{{ user `autounattend` }}",
-        "scripts/windows/*"
+        "windows/scripts/*",
+        "windows/files/cloudbase-init.conf",
+        "windows/files/cloudbase-init-unattend.conf"
       ]
     }
   ],
   "provisioners": [
     {
       "scripts": [
-        "scripts/windows/debloat-windows.ps1"
+        "windows/scripts/debloat-windows.ps1"
       ],
       "type": "powershell"
     },
@@ -75,14 +77,13 @@
     {
       "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
       "scripts": [
-        "scripts/windows/pin-powershell.bat",
-        "scripts/windows/set-winrm-automatic.bat",
-        "scripts/windows/uac-enable.bat",
-        "scripts/windows/dis-updates.bat",
-        "scripts/windows/compact.bat"
+        "windows/scripts/pin-powershell.bat",
+        "windows/scripts/set-winrm-automatic.bat",
+        "windows/scripts/uac-enable.bat",
+        "windows/scripts/dis-updates.bat",
+        "windows/scripts/compact.bat"
       ],
       "type": "windows-shell"
     }
   ]
 }
-

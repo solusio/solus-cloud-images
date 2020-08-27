@@ -29,6 +29,9 @@ if not exist "C:\Windows\Temp\sdelete.exe" (
 	cmd /c ""C:\Program Files\7-Zip\7z.exe" x C:\Windows\Temp\SDelete.zip -oC:\Windows\Temp"
 )
 
+copy "A:\cloudbase-init.conf" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\"
+copy "A:\cloudbase-init-unattend.conf" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\"
+
 msiexec /qb /x C:\Windows\Temp\7z1900-x64.msi
 
 net stop wuauserv
