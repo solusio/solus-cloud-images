@@ -4,7 +4,7 @@
     "password": "clouduser",
     "disk_size": "12000",
     "output_directory": "output/windows",
-    "output_image_name": "solus.io-window-server-2019",
+    "output_image_name": "solus.io-windows-server-2019",
     "name": "windows-server-2019-standard-x64-eval",
     "cpus": "2",
     "memory": "4096",
@@ -57,7 +57,9 @@
       "disk_size": "{{ user `disk_size` }}",
       "floppy_files": [
         "{{ user `autounattend` }}",
-        "scripts/windows/*"
+        "scripts/windows/*",
+        "files/cloudbase-init.conf",
+        "files/cloudbase-init-unattend.conf"
       ]
     }
   ],
@@ -85,4 +87,3 @@
     }
   ]
 }
-
