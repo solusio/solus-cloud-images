@@ -58,8 +58,8 @@
       "floppy_files": [
         "{{ user `autounattend` }}",
         "scripts/windows/*",
-        "files/cloudbase-init.conf",
-        "files/cloudbase-init-unattend.conf"
+        "windows/files/cloudbase-init.conf",
+        "windows/files/cloudbase-init-unattend.conf"
       ]
     }
   ],
