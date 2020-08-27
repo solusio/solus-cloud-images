@@ -57,7 +57,7 @@
       "disk_size": "{{ user `disk_size` }}",
       "floppy_files": [
         "{{ user `autounattend` }}",
-        "scripts/windows/*",
+        "windows/scripts/*",
         "windows/files/cloudbase-init.conf",
         "windows/files/cloudbase-init-unattend.conf"
       ]
@@ -66,7 +66,7 @@
   "provisioners": [
     {
       "scripts": [
-        "scripts/windows/debloat-windows.ps1"
+        "windows/scripts/debloat-windows.ps1"
       ],
       "type": "powershell"
     },
@@ -77,11 +77,11 @@
     {
       "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
       "scripts": [
-        "scripts/windows/pin-powershell.bat",
-        "scripts/windows/set-winrm-automatic.bat",
-        "scripts/windows/uac-enable.bat",
-        "scripts/windows/dis-updates.bat",
-        "scripts/windows/compact.bat"
+        "windows/scripts/pin-powershell.bat",
+        "windows/scripts/set-winrm-automatic.bat",
+        "windows/scripts/uac-enable.bat",
+        "windows/scripts/dis-updates.bat",
+        "windows/scripts/compact.bat"
       ],
       "type": "windows-shell"
     }
