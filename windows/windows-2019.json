@@ -59,7 +59,8 @@
         "{{ user `autounattend` }}",
         "windows/scripts/*",
         "windows/files/cloudbase-init.conf",
-        "windows/files/cloudbase-init-unattend.conf"
+        "windows/files/cloudbase-init-unattend.conf",
+        "windows/files/unattend.xml"
       ]
     }
   ],
