@@ -155,7 +155,7 @@ esac
 
 tempkey_rollback
 
-echo "solusio" > $psa_d/var/cloud_id
+echo "SOLUSIO" > $psa_d/var/cloud_id
 /usr/local/psa/admin/sbin/nginxmng -d
 /usr/local/psa/admin/sbin/nginxmng -e
 
