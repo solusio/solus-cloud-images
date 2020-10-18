@@ -2,3 +2,4 @@ packer_cache
 output
 build
 virtio-win.iso
+.idea

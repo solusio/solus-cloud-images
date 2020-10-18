@@ -35,10 +35,17 @@ usage() {
       build         Executes Packer to build the specified OS image.
 
     Supported OS images:
-      debian                      Debian  images
+      debian-8                    Debian 8 images
+      debian-10                   Debian 10 images
+      ubuntu-18                   Ubuntu 18.04 images
+      ubuntu-18-plesk             Ubuntu 18.04 images with Plesk
+      ubuntu-20                   Ubuntu 20.04 images
       fedora                      Fedora  images
+      centos-7                    CentOS 7 images
+      centos-7-plesk              CentOS 7 images with Plesk
       centos-8                    CentOS 8 images
-      windows-2019                Windows images
+      centos-8-plesk              CentOS 8 images with Plesk
+      windows-2019                Windows 2019 images
       alpine                      Alpine images
 
     Options:
@@ -101,9 +108,15 @@ do_build() {
     image_path="output/alpine"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
-  debian)
+  debian-8)
     inten="Build debian 8 cloud-init image"
     config="debian/solus-debian-8.json"
+    image_path="output/debian"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+    debian-10)
+    inten="Build debian 10 cloud-init image"
+    config="debian/solus-debian-10.json"
     image_path="output/debian"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -140,6 +153,12 @@ do_build() {
   ubuntu-18-plesk)
     inten="Build ubuntu 18 cloud-init image with plesk"
     config="ubuntu/solus-ubuntu-18-plesk.json"
+    image_path="output/ubuntu"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  ubuntu-20)
+    inten="Build ubuntu 20 cloud-init image"
+    config="ubuntu/solus-ubuntu-20.json"
     image_path="output/ubuntu"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -209,7 +228,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="alpine centos-7-plesk centos-8 centos-8-plesk debian fedora ubuntu-18 ubuntu-18-plesk windows-2019"
+image_types_allowed="alpine centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 fedora ubuntu-18 ubuntu-18-plesk ubuntu-20 windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
