@@ -40,6 +40,7 @@ usage() {
       ubuntu-18                   Ubuntu 18.04 images
       ubuntu-18-plesk             Ubuntu 18.04 images with Plesk
       ubuntu-20                   Ubuntu 20.04 images
+      ubuntu-20-plesk             Ubuntu 20.04 images with Plesk
       fedora                      Fedora  images
       centos-7                    CentOS 7 images
       centos-7-plesk              CentOS 7 images with Plesk
@@ -162,6 +163,12 @@ do_build() {
     image_path="output/ubuntu"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
+  ubuntu-20-plesk)
+    inten="Build ubuntu 20 cloud-init image"
+    config="ubuntu/solus-ubuntu-20-plesk.json"
+    image_path="output/ubuntu"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
   windows-2019)
     inten="Build windows server 2019 cloud-based-init image"
     config="windows/windows-2019.json"
@@ -228,7 +235,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="alpine centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 fedora ubuntu-18 ubuntu-18-plesk ubuntu-20 windows-2019"
+image_types_allowed="alpine centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 fedora ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
