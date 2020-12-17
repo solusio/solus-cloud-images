@@ -1,9 +1,10 @@
 #!/bin/bash
 
 clear_user(){
-	for user in centos; do
+	for user in oracle; do
 		userdel --force --remove "$user" || passwd -l "$user" || true
 		rm -rf "/home/$user/"
+		rm -f "/etc/sudoers.d/oracle"
 	done
 }
 
