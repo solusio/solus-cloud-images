@@ -9,13 +9,13 @@ clear_user(){
 }
 
 clean_up(){
-  rm -rf /etc/rc.local
-  rm -rf /etc/rc.d/rc.local
+	rm -rf /etc/rc.local
+	rm -rf /etc/rc.d/rc.local
 
-  systemctl disable rc-local
-  systemctl stop rc-local
-  rm -rf /etc/systemd/system/rc-local.service
-  rm -rf /etc/subgid.lock
+	systemctl disable rc-local
+	systemctl stop rc-local
+	rm -rf /etc/systemd/system/rc-local.service
+	rm -rf /etc/subgid.lock
 }
 
 clear_user
