@@ -2,7 +2,7 @@
   "variables": {
     "user": "centos",
     "password": "centos",
-    "disk_size": "5000",
+    "disk_size": "6000",
     "output_directory": "output/centos",
     "output_image_name": "solus-io-centos-7-plesk"
   },
@@ -22,8 +22,8 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://mirror.yandex.ru/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-2003.iso",
-      "iso_checksum": "087a5743dc6fd6706d9b961b8147423ddc029451b938364c760d75440eb7be14",
+      "iso_url": "https://mirror.yandex.ru/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso",
+      "iso_checksum": "e33d7b1ea7a9e2f38c8f693215dd85254c3a4fe446f93f563279715b68d07987",
       "iso_checksum_type": "sha256",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
@@ -71,7 +71,7 @@
       "environment_vars": [
         "IS_SOLUS=true",
         "INSTALL_BYOL=true",
-        "INSTALL_PLESK_VERSION=18.0.31",
+        "INSTALL_PLESK_VERSION=18.0.32",
         "INSTALL_PLESK_PRESET=Recommended",
         "INSTALL_WITH_PLESK_COMPONENTS=",
         "INSTALL_WITHOUT_PLESK_COMPONENTS=",

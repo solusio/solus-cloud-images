@@ -1,6 +1,7 @@
 #!/bin/bash
 
 clear_user(){
+	rm -f /etc/sudoers.d/*
 	for user in centos; do
 		userdel --force --remove "$user" || passwd -l "$user" || true
 		rm -rf "/home/$user/"
