@@ -24,7 +24,7 @@
 			"iso_checksum_type": "sha256",
 			"output_directory": "{{user `output_directory`}}",
 			"shutdown_command": "echo 'debian' | sudo -S /sbin/shutdown -hP now",
-			"http_directory": "http",
+			"http_directory": "debian/http",
 			"ssh_username": "{{ user `user` }}",
 			"ssh_password": "{{ user `password` }}",
 			"disk_compression": true,
