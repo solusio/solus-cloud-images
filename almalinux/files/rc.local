@@ -1,0 +1,23 @@
+#!/bin/bash
+
+clear_user(){
+  rm -f /etc/sudoers.d/*
+  for user in almalinux; do
+    userdel --force --remove "$user" || passwd -l "$user" || true
+    rm -rf "/home/$user/"
+  done
+}
+
+clean_up(){
+  rm -rf /etc/rc.local
+  rm -rf /etc/rc.d/rc.local
+
+  systemctl disable rc-local
+  systemctl stop rc-local
+  rm -rf /etc/systemd/system/rc-local.service
+  rm -rf /etc/subgid.lock
+}
+
+clear_user
+
+clean_up

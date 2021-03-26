@@ -22,7 +22,7 @@ cleanup() {
   fi
   if [[ -n "$opt_cleanup" ]]; then
     rm -rf output/
-	fi
+  fi
 }
 
 usage() {
@@ -49,6 +49,7 @@ usage() {
       windows-2019                Windows 2019 images
       alpine                      Alpine images
       oracle-8                    Oracle Linux 8 images
+      almalinux-8                 AlmaLinux 8 images
 
     Options:
       --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
@@ -104,6 +105,12 @@ do_build() {
   local config=
 
   case "$opt_type" in
+  almalinux-8 )
+    inten="Build AlmaLinux 8 cloud-init image"
+    config="almalinux/solus-almalinux-8.json"
+    image_path="output/almalinux"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
   alpine)
     inten="Build alpine cloud-init image"
     config="alpine/solus-alpine.json"
@@ -201,7 +208,7 @@ do_build() {
   packer_build ${config} || return 1
 
     if [[ -n "$opt_destination" ]]; then
-		    do_transfer || return 1
+        do_transfer || return 1
     fi
 
   return 0
@@ -209,12 +216,12 @@ do_build() {
 
 do_transfer()
 {
-	scp -i test_private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "$image_path"/* "$opt_destination"
-	retVal=$?
-		if [[ ! ${retVal} -eq 0 ]]; then
-		    exit 1
-		fi
-	echo "Transferred images from path $image_path to $opt_destination"
+  scp -i test_private_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "$image_path"/* "$opt_destination"
+  retVal=$?
+    if [[ ! ${retVal} -eq 0 ]]; then
+        exit 1
+    fi
+  echo "Transferred images from path $image_path to $opt_destination"
 }
 
 do_ssh_connection_check()
@@ -248,7 +255,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="alpine centos-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 fedora oracle-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk windows-2019"
+image_types_allowed="almalinux-8 alpine centos-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 fedora oracle-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
