@@ -52,6 +52,7 @@ usage() {
       almalinux-8                 AlmaLinux 8 images
       rockylinux-8                RockyLinux 8 images
       vzlinux-8                   VzLinux 8 images
+      cpanel-7                    cPanel on centos 7 images
 
     Options:
       --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
@@ -140,6 +141,12 @@ do_build() {
     centos-7)
     inten="Build centos 7 cloud-init image"
     config="centos/solus-centos-7.json"
+    image_path="output/centos"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+    cpanel-7)
+    inten="Build cpanel on centos 7 cloud-init image"
+    config="centos/solus-centos-7-cpanel.json"
     image_path="output/centos"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -269,7 +276,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 alpine centos-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019"
+image_types_allowed="almalinux-8 alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
