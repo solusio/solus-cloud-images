@@ -37,6 +37,7 @@ usage() {
     Supported OS images:
       debian-8                    Debian 8 images
       debian-10                   Debian 10 images
+      debian-11                   Debian 11 images
       ubuntu-18                   Ubuntu 18.04 images
       ubuntu-18-plesk             Ubuntu 18.04 images with Plesk
       ubuntu-20                   Ubuntu 20.04 images
@@ -126,9 +127,15 @@ do_build() {
     image_path="output/debian"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
-    debian-10)
+  debian-10)
     inten="Build debian 10 cloud-init image"
     config="debian/solus-debian-10.json"
+    image_path="output/debian"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  debian-11)
+    inten="Build debian 11 cloud-init image"
+    config="debian/solus-debian-11.json"
     image_path="output/debian"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -138,13 +145,13 @@ do_build() {
     image_path="output/fedora"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
-    centos-7)
+  centos-7)
     inten="Build centos 7 cloud-init image"
     config="centos/solus-centos-7.json"
     image_path="output/centos"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
-    cpanel-7)
+  cpanel-7)
     inten="Build cpanel on centos 7 cloud-init image"
     config="centos/solus-centos-7-cpanel.json"
     image_path="output/centos"
@@ -276,7 +283,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019"
+image_types_allowed="almalinux-8 alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
