@@ -2,7 +2,7 @@
 	"variables": {
 		"user": "root",
 		"password": "root",
-		"disk_size": "1000",
+		"disk_size": "3000",
 		"output_directory": "output/debian",
 		"output_image_name": "solus-debian-10"
 	},
@@ -13,7 +13,7 @@
 			"vm_name": "{{user `output_image_name`}}.qcow2",
 			"type": "qemu",
 			"qemuargs": [
-					[ "-m", "2048m" ]
+					[ "-m", "3072m" ]
 			],
 			"format": "qcow2",
 			"headless": true,
