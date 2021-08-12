@@ -51,6 +51,7 @@ usage() {
       alpine                      Alpine images
       oracle-8                    Oracle Linux 8 images
       almalinux-8                 AlmaLinux 8 images
+      almalinux-8-plesk           AlmaLinux 8 images with Plesk
       rockylinux-8                RockyLinux 8 images
       vzlinux-8                   VzLinux 8 images
       cpanel-7                    cPanel on centos 7 images
@@ -112,6 +113,12 @@ do_build() {
   almalinux-8 )
     inten="Build AlmaLinux 8 cloud-init image"
     config="almalinux/solus-almalinux-8.json"
+    image_path="output/almalinux"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+    almalinux-8-plesk )
+    inten="Build AlmaLinux 8 cloud-init image"
+    config="almalinux/solus-almalinux-8-plesk.json"
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -283,7 +290,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019"
+image_types_allowed="almalinux-8 almalinux-8-plesk alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
