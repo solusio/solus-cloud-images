@@ -2,7 +2,7 @@
 	"variables": {
 		"user": "root",
 		"password": "root",
-		"disk_size": "1000",
+		"disk_size": "4000",
 		"output_directory": "output/debian",
 		"output_image_name": "solus-debian-11"
 	},
@@ -19,8 +19,8 @@
 			"headless": true,
 			"accelerator": "kvm",
 			"disk_size": "{{ user `disk_size` }}",
-			"iso_url": "https://cdimage.debian.org/cdimage/bullseye_di_rc2/amd64/iso-cd/debian-bullseye-DI-rc2-amd64-netinst.iso",
-			"iso_checksum": "6d2ec6529bfe4fd1cf65748f8b58d81085b3ae30883954227fb08d57bb44cfb9",
+			"iso_url": "https://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/debian-11.0.0-amd64-netinst.iso",
+			"iso_checksum": "ae6d563d2444665316901fe7091059ac34b8f67ba30f9159f7cef7d2fdc5bf8a",
 			"iso_checksum_type": "sha256",
 			"output_directory": "{{user `output_directory`}}",
 			"shutdown_command": "echo 'debian' | sudo -S /sbin/shutdown -hP now",
