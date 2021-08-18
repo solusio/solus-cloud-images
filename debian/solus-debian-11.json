@@ -42,7 +42,7 @@
 			"boot_command": [
 				"<esc><wait>",
 				"install <wait>",
-				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-debian-11.cfg ",
 				"debian-installer=en_US.UTF-8 <wait>",
 				"auto <wait>",
 				"locale=en_US.UTF-8 <wait>",
