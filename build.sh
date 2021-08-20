@@ -48,6 +48,7 @@ usage() {
       centos-8                    CentOS 8 images
       centos-8-plesk              CentOS 8 images with Plesk
       windows-2019                Windows 2019 images
+      windows-2022                Windows 2022 images
       alpine                      Alpine images
       oracle-8                    Oracle Linux 8 images
       almalinux-8                 AlmaLinux 8 images
@@ -233,6 +234,15 @@ do_build() {
         wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-5/virtio-win.iso
     fi
     ;;
+  windows-2022)
+    inten="Build windows server 2022 cloud-based-init image"
+    config="windows/windows-2022.json"
+    image_path="output/windows"
+    [[ ! -d image_path ]] || rm -rf image_path
+    if [[ ! -f "./virtio-win.iso" ]]; then
+        wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.204-1/virtio-win.iso
+    fi
+    ;;
   *)
     echo "An unknown image type $opt_type"
     return 1
@@ -290,7 +300,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 almalinux-8-plesk alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019"
+image_types_allowed="almalinux-8 almalinux-8-plesk alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019 windows-2022"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
