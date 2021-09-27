@@ -74,12 +74,22 @@ This option may be useful if you transfer the image using the `--opt_destination
 When you have launched the build, we recommend that you connect to the build server via VNC.
 It will help you monitor the build and promptly see any errors if they occur.
 
-**Note:** If Packer cannot find the location of the `qemu-kvm` package during the build, check the `"qemu_binary": "/.../.../qemu-kvm"`
-line in the JSON template and edit the path to `qemu-kvm` if necessary.
-
 ![](images/1.png)
 
 ![](images/2.png)
+
+If you see the following error:
+```
+Build 'solus.io' errored: Failed creating Qemu driver: exec: "qemu-system-x86_64": executable file not found in $PATH
+```
+Then create a symbolic link from `/usr/libexec/qemu-kvm` to `/usr/libexec/qemu-system-x86_64`:
+ 
+```
+# ln -s /usr/libexec/qemu-kvm /usr/bin/qemu-system-x86_64
+``` 
+
+**Note:** If Packer still cannot find the location of the `qemu-kvm` package during the build, check the `"qemu_binary": "/.../.../qemu-kvm"`
+line in the JSON template and edit the path to `qemu-kvm` if necessary.
 
 ## 6. Getting a built image
 
