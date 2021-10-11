@@ -57,6 +57,7 @@ usage() {
       vzlinux-8                   VzLinux 8 images
       cpanel-7                    cPanel on centos 7 images
       openvz-7                    OpenVZ 7 images
+      openvz-8                    OpenVZ 8 images
 
     Options:
       --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
@@ -232,6 +233,12 @@ do_build() {
     image_path="output/openvz"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
+  openvz-8)
+    inten="Build OpenVZ 8 cloud-init image"
+    config="openvz/solus-openvz-8.json"
+    image_path="output/openvz"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
   windows-2019)
     inten="Build windows server 2019 cloud-based-init image"
     config="windows/windows-2019.json"
@@ -307,7 +314,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 almalinux-8-plesk alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 openvz-7 windows-2019 windows-2022"
+image_types_allowed="almalinux-8 almalinux-8-plesk alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2022"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"

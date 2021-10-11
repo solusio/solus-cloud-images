@@ -1,0 +1,74 @@
+{
+  "variables": {
+    "user": "openvz",
+    "password": "openvz",
+    "disk_size": "5000",
+    "output_directory": "output/openvz",
+    "output_image_name": "solus-openvz-8"
+  },
+
+  "builders": [
+    {
+      "name": "solus.io",
+      "vm_name": "{{user `output_image_name`}}.qcow2",
+      "type": "qemu",
+      "qemuargs": [
+        [ "-m", "1900m" ]
+      ],
+      "format": "qcow2",
+      "headless": true,
+      "accelerator": "kvm",
+      "disk_size": "{{ user `disk_size` }}",
+      "iso_url": "https://download.openvz.org/virtuozzo/releases/8.0/x86_64/iso/openvz-iso-8.0.0-1336.iso",
+      "iso_checksum": "file:https://download.openvz.org/virtuozzo/releases/8.0/x86_64/iso/sha256sum",
+      "output_directory": "{{user `output_directory`}}",
+      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "openvz/data",
+      "ssh_username": "{{ user `user` }}",
+      "ssh_password": "{{ user `password` }}",
+      "disk_compression": true,
+      "ssh_host_port_min" : 2222,
+      "ssh_host_port_max" : 4444,
+      "vnc_port_min": 5901,
+      "vnc_port_max": 6000,
+      "http_port_min": 8501,
+      "http_port_max": 8501,
+      "ssh_wait_timeout": "40m",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "vnc_bind_address": "0.0.0.0",
+      "boot_wait": "2s",
+      "boot_command": [
+        "<down>", "e",
+        "<down><down>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right>",
+        "inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg vz_mand <leftCtrlOn>x<leftCtrlOff>"
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "openvz/data/rc.local",
+      "destination": "/tmp/rc.local"
+    },
+    {
+      "type": "file",
+      "source": "openvz/data/rc-local.conf",
+      "destination": "/tmp/rc-local.conf"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
+      "scripts": [
+        "openvz/data/packages.sh",
+        "scripts/configure.sh",
+        "scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
