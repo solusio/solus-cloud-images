@@ -68,7 +68,8 @@
   "provisioners": [
     {
       "scripts": [
-        "windows/scripts/debloat-windows.ps1"
+        "windows/scripts/debloat-windows.ps1",
+	"windows/scripts/disable-password-complexity.ps1"
       ],
       "type": "powershell"
     },
