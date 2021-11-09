@@ -48,12 +48,16 @@ usage() {
       centos-8                    CentOS 8 images
       centos-8-plesk              CentOS 8 images with Plesk
       windows-2019                Windows 2019 images
+      windows-2022                Windows 2022 images
       alpine                      Alpine images
       oracle-8                    Oracle Linux 8 images
       almalinux-8                 AlmaLinux 8 images
+      almalinux-8-plesk           AlmaLinux 8 images with Plesk
       rockylinux-8                RockyLinux 8 images
       vzlinux-8                   VzLinux 8 images
       cpanel-7                    cPanel on centos 7 images
+      openvz-7                    OpenVZ 7 images
+      openvz-8                    OpenVZ 8 images
 
     Options:
       --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
@@ -109,9 +113,15 @@ do_build() {
   local config=
 
   case "$opt_type" in
-  almalinux-8 )
+  almalinux-8)
     inten="Build AlmaLinux 8 cloud-init image"
     config="almalinux/solus-almalinux-8.json"
+    image_path="output/almalinux"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+    almalinux-8-plesk )
+    inten="Build AlmaLinux 8 cloud-init image"
+    config="almalinux/solus-almalinux-8-plesk.json"
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -181,7 +191,7 @@ do_build() {
     image_path="output/oracle"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
-  rockylinux-8 )
+  rockylinux-8)
     inten="Build RockyLinux 8 cloud-init image"
     config="rockylinux/solus-rockylinux-8.json"
     image_path="output/rockylinux"
@@ -211,10 +221,22 @@ do_build() {
     image_path="output/ubuntu"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
-  vzlinux-8 )
+  vzlinux-8)
     inten="Build VzLinux 8 cloud-init image"
     config="vzlinux/solus-vzlinux-8.json"
     image_path="output/vzlinux"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  openvz-7)
+    inten="Build OpenVZ 7 cloud-init image"
+    config="openvz/solus-openvz-7.json"
+    image_path="output/openvz"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  openvz-8)
+    inten="Build OpenVZ 8 cloud-init image"
+    config="openvz/solus-openvz-8.json"
+    image_path="output/openvz"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
   windows-2019)
@@ -224,6 +246,15 @@ do_build() {
     [[ ! -d image_path ]] || rm -rf image_path
     if [[ ! -f "./virtio-win.iso" ]]; then
         wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-5/virtio-win.iso
+    fi
+    ;;
+  windows-2022)
+    inten="Build windows server 2022 cloud-based-init image"
+    config="windows/windows-2022.json"
+    image_path="output/windows"
+    [[ ! -d image_path ]] || rm -rf image_path
+    if [[ ! -f "./virtio-win.iso" ]]; then
+        wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.204-1/virtio-win.iso
     fi
     ;;
   *)
@@ -283,7 +314,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 windows-2019"
+image_types_allowed="almalinux-8 almalinux-8-plesk alpine centos-7 cpanel-7 centos-7-plesk centos-8 centos-8-plesk debian-8 debian-10 debian-11 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2022"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
