@@ -68,7 +68,7 @@
       "environment_vars": [
         "IS_SOLUS=true",
         "INSTALL_BYOL=true",
-        "INSTALL_PLESK_VERSION=18.0.38",
+        "INSTALL_PLESK_VERSION=18.0.41",
         "INSTALL_PLESK_PRESET=Recommended",
         "INSTALL_WITH_PLESK_COMPONENTS=",
         "INSTALL_WITHOUT_PLESK_COMPONENTS=",

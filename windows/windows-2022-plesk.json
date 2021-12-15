@@ -2,9 +2,9 @@
   "variables": {
     "user": "clouduser",
     "password": "clouduser",
-    "disk_size": "12000",
+    "disk_size": "22000",
     "output_directory": "output/windows",
-    "output_image_name": "solus-windows-server-2022",
+    "output_image_name": "solus-windows-server-2022-plesk",
     "name": "windows-server-2022-standard-x64-eval",
     "cpus": "2",
     "memory": "4096",
@@ -96,6 +96,22 @@
       "restart_timeout": "60m"
     },
     {
+      "scripts": [
+        "windows/scripts/install-plesk.ps1"
+      ],
+      "type": "powershell"
+    },
+    {
+      "type": "file",
+      "source": "windows/scripts/prepare_instance.ps1",
+      "destination": "C:\\Windows\\Temp\\prepare_instance.ps1"
+    },
+    {
+      "type": "file",
+      "source": "windows/scripts/cloning_script.ps1",
+      "destination": "C:\\Windows\\Temp\\cloning_script.ps1"
+    },
+    {
       "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
       "scripts": [
         "windows/scripts/pin-powershell.bat",
@@ -105,6 +121,23 @@
         "windows/scripts/compact.bat"
       ],
       "type": "windows-shell"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "& \"$env:plesk_cli\\cloning.exe\" --update -prepare-public-image true -skip-update true -reset-init-conf true -maintenance true",
+        "New-Item -Path \"HKLM:\\SOFTWARE\\Plesk\\ServicesBackup_W3SVC\" -Force",
+        "Set-ItemProperty -Path \"HKLM:\\SOFTWARE\\Plesk\\ServicesBackup_W3SVC\" -Name \"DelayedAutostart\" -Value 0 -Force",
+        "Copy-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\W3SVC\" -Destination \"HKLM:\\SOFTWARE\\Plesk\\ServicesBackup_W3SVC\" -Name \"DelayedAutostart\" -Force -ErrorAction Continue",
+        "Set-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\W3SVC\" -Name \"DelayedAutostart\" -Value 1 -Force"
+      ]
+    },
+    {
+      "type": "powershell",
+      "scripts": [
+        "windows/scripts/post_install.ps1",
+        "windows/scripts/cleanup.ps1"
+      ]
     }
   ]
 }

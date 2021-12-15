@@ -4,7 +4,7 @@
     "password": "clouduser",
     "disk_size": "12000",
     "output_directory": "output/windows",
-    "output_image_name": "solus.io-windows-server-2019",
+    "output_image_name": "solus-windows-server-2019",
     "name": "windows-server-2019-standard-x64-eval",
     "cpus": "2",
     "memory": "4096",
@@ -32,8 +32,14 @@
           "-smp",
           "{{ user `cpus` }}"
         ],
-        [ "-drive", "file={{ user `virtio_win_iso` }},media=cdrom,index=3" ],
-        [ "-drive", "file={{user `output_directory`}}/{{ user `output_image_name`}}.qcow2,if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1" ]
+        [
+          "-drive",
+          "file={{ user `virtio_win_iso` }},media=cdrom,index=3"
+        ],
+        [
+          "-drive",
+          "file={{user `output_directory`}}/{{ user `output_image_name`}}.qcow2,if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"
+        ]
       ],
       "iso_checksum_type": "sha256",
       "iso_checksum": "{{ user `iso_checksum` }}",
@@ -76,6 +82,19 @@
       "type": "windows-restart"
     },
     {
+      "type": "file",
+      "source": "windows/scripts/InstallUpdates.ps1",
+      "destination": "C:\\Windows\\Temp\\InstallUpdates.ps1"
+    },
+    {
+      "type": "powershell",
+      "script": "windows/scripts/install_win_updates.ps1"
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "60m"
+    },
+    {
       "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
       "scripts": [
         "windows/scripts/pin-powershell.bat",
@@ -85,6 +104,12 @@
         "windows/scripts/compact.bat"
       ],
       "type": "windows-shell"
+    },
+    {
+      "type": "powershell",
+      "scripts": [
+        "windows/scripts/cleanup.ps1"
+      ]
     }
   ]
 }
