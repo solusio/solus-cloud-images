@@ -2,10 +2,12 @@
 
 set -euxo pipefail
 
-sed -ie "\$ahttp://dl-cdn.alpinelinux.org/alpine/v3.12/main" /etc/apk/repositories
-sed -ie "\$ahttp://dl-cdn.alpinelinux.org/alpine/v3.12/community" /etc/apk/repositories
-apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing --repository http://dl-cdn.alpinelinux.org/alpine/edge/community --repository http://dl-cdn.alpinelinux.org/alpine/edge/main cloud-init
-apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing --repository http://dl-cdn.alpinelinux.org/alpine/edge/community --repository http://dl-cdn.alpinelinux.org/alpine/edge/main cloud-utils
+sed -ie "\$ahttp://dl-cdn.alpinelinux.org/alpine/v3.15/main" /etc/apk/repositories
+sed -ie "\$ahttp://dl-cdn.alpinelinux.org/alpine/v3.15/community" /etc/apk/repositories
 apk update
 apk upgrade --available
-apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing cloud-init
+apk add cloud-init cloud-utils
+# According to https://git.alpinelinux.org/aports/tree/community/cloud-init/README.Alpine
+# After the cloud-init package is installed you will need to run the
+# "setup-cloud-init" command to prepare the OS for cloud-init use.
+setup-cloud-init
