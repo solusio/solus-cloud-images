@@ -22,6 +22,9 @@ clean_garbage()
 		chmod 0644 /root/.ssh/known_hosts
 	fi
 
+  # Lock root password
+  passwd -l root
+
 	# Clean up log files
 	find /var/log -type f | while read f; do echo -ne '' > ${f}; done;
 
