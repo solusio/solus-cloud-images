@@ -30,7 +30,10 @@ clean_garbage()
 
 	# Clean evidences of your activity
 	echo -n > /root/.bash_history
+	echo -n > /root/.ash_history
 
+  fstrim --all
+  sync
 }
 
 clean_garbage
