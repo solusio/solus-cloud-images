@@ -27,9 +27,9 @@ Install Packer by HashiCorp:
 1. Access the build server command line via SSH.
 2. Download Packer:
 
-   `curl -kO https://releases.hashicorp.com/packer/1.5.1/packer_1.5.1_linux_amd64.zip`
+   `curl -kO https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_linux_amd64.zip`
 
-4. Unzip the Packer archive by running the `unzip packer_1.5.1_linux_amd64.zip` command.
+4. Unzip the Packer archive by running the `unzip packer_1.7.8_linux_amd64.zip` command.
 5. Run the `cp packer /usr/sbin/` command to copy the Packer binary to the `/usr/sbin/` directory.
 
 ## 3. Downloading the repository and customizing the OS image
@@ -102,7 +102,3 @@ The `./build` directory will contain `packer.log`.
 - For correct WinRM work, it is necessary to use SSL connection. It is already set up in the configs.
 - To enable Windows updates, uncomment the corresponding code block in `html/Autounattend.xml` and 
   increase the disk size in the `.json` file.
-
-
-
-
