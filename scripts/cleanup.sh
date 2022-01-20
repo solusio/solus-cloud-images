@@ -27,6 +27,9 @@ clean_garbage()
 		rm -rf /var/lib/dhcp
 	fi
 
+  # Remove default network configs
+  rm -f /etc/sysconfig/network-scripts/ifcfg-ens3
+
 	# Clean /tmp
 	rm -rf /tmp/*
 
