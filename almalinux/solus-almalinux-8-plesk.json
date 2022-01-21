@@ -4,12 +4,12 @@
     "password": "almalinux",
     "disk_size": "9000",
     "output_directory": "output/almalinux",
-    "output_image_name": "solus-io-almalinux-8-plesk"
+    "output_image_name": "solus-almalinux-8-plesk"
   },
 
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solus",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemuargs": [
@@ -19,8 +19,8 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://repo.almalinux.org/almalinux/8.4/isos/x86_64/AlmaLinux-8.4-x86_64-minimal.iso",
-      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.4/isos/x86_64/CHECKSUM",
+      "iso_url": "https://repo.almalinux.org/almalinux/8.5/isos/x86_64/AlmaLinux-8.5-x86_64-minimal.iso",
+      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.5/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
       "http_directory": "almalinux/http",

@@ -16,6 +16,9 @@ yum -y install ${PACKAGES}
 systemctl enable cloud-init.service
 systemctl enable qemu-guest-agent
 
+systemctl disable NetworkManager-wait-online.service
+systemctl mask NetworkManager-wait-online.service
+
 # Creating config for UEFI boot
 grub2-mkconfig -o /boot/efi/EFI/almalinux/grub.cfg
 sed -i 's/linux16/linuxefi/g' /boot/efi/EFI/almalinux/grub.cfg
