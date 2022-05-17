@@ -18,7 +18,8 @@
     "winrm_username": "clouduser",
     "winrm_password": "clouduser",
     "headless": "true",
-    "restart_timeout": "5m"
+    "restart_timeout": "5m",
+    "iso_target_path": "windows/windows-2022.iso"
   },
   "builders": [
     {
@@ -35,6 +36,10 @@
         ],
         [
           "-drive",
+          "file={{ user `iso_target_path` }},media=cdrom,index=2"
+        ],
+        [
+          "-drive",
           "file={{ user `virtio_win_iso` }},media=cdrom,index=3"
         ],
         [
@@ -46,6 +51,7 @@
       "iso_urls": [
         "{{ user `iso_url` }}"
       ],
+      "iso_target_path": "{{ user `iso_target_path` }}",
       "communicator": "winrm",
       "winrm_username": "{{ user `winrm_username` }}",
       "winrm_password": "{{ user `winrm_password` }}",
