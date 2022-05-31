@@ -1,0 +1,70 @@
+{
+  "variables": {
+    "user": "almalinux",
+    "password": "almalinux",
+    "disk_size": "4000",
+    "output_directory": "output/almalinux",
+    "output_image_name": "solus-almalinux-9"
+  },
+
+  "builders": [
+    {
+      "name": "solus",
+      "vm_name": "{{user `output_image_name`}}.qcow2",
+      "type": "qemu",
+      "qemu_binary": "/usr/libexec/qemu-kvm",
+      "qemuargs": [
+        [ "-m", "1900m" ],
+        [ "-cpu", "host" ]
+      ],
+      "format": "qcow2",
+      "headless": true,
+      "accelerator": "kvm",
+      "disk_size": "{{ user `disk_size` }}",
+      "iso_url": "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9.0-x86_64-minimal.iso",
+      "iso_checksum": "file:https://repo.almalinux.org/almalinux/9/isos/x86_64/CHECKSUM",
+      "output_directory": "{{user `output_directory`}}",
+      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "almalinux/http",
+      "ssh_username": "{{ user `user` }}",
+      "ssh_password": "{{ user `password` }}",
+      "disk_compression": true,
+      "host_port_min" : 2222,
+      "host_port_max" : 4444,
+      "vnc_port_min": 5901,
+      "vnc_port_max": 6000,
+      "http_port_min": 8501,
+      "http_port_max": 8501,
+      "ssh_wait_timeout": "40m",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "vnc_bind_address": "0.0.0.0",
+      "boot_wait": "10s",
+      "boot_command": [
+        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-almalinux-9.cfg <enter><wait>"
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "almalinux/files/rc.local",
+      "destination": "/tmp/rc.local"
+    },
+    {
+      "type": "file",
+      "source": "almalinux/files/rc-local.conf",
+      "destination": "/tmp/rc-local.conf"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
+      "scripts": [
+        "almalinux/scripts/packages.sh",
+        "scripts/configure.sh",
+        "scripts/cleanup.sh"
+      ]
+    }
+  ]
+}
