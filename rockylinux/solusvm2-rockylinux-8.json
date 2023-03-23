@@ -1,18 +1,17 @@
 {
   "variables": {
-    "user": "almalinux",
-    "password": "almalinux",
+    "user": "rockylinux",
+    "password": "rockylinux",
     "disk_size": "4000",
-    "output_directory": "output/almalinux",
-    "output_image_name": "solus-almalinux-8"
+    "output_directory": "output/rockylinux",
+    "output_image_name": "solus-rockylinux-8"
   },
 
   "builders": [
     {
-      "name": "solus",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
         [ "-m", "1900m" ]
       ],
@@ -20,11 +19,11 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://repo.almalinux.org/almalinux/8.5/isos/x86_64/AlmaLinux-8.5-x86_64-minimal.iso",
-      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.5/isos/x86_64/CHECKSUM",
+      "iso_url": "https://download.rockylinux.org/pub/rocky/8.7/isos/x86_64/Rocky-8.7-x86_64-boot.iso",
+      "iso_checksum": "file:https://download.rockylinux.org/pub/rocky/8.7/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "almalinux/http",
+      "http_directory": "rockylinux/data",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -40,7 +39,7 @@
       "vnc_bind_address": "0.0.0.0",
       "boot_wait": "10s",
       "boot_command": [
-        "<tab> linux ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-almalinux-8.cfg <enter><wait>"
+        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg <enter><wait>"
       ]
     }
   ],
@@ -48,19 +47,19 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "almalinux/files/rc.local",
+      "source": "rockylinux/data/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "almalinux/files/rc-local.conf",
+      "source": "rockylinux/data/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
     },
     {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
-        "almalinux/scripts/packages.sh",
+        "rockylinux/data/packages.sh",
         "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]

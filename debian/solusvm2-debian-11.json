@@ -2,25 +2,25 @@
 	"variables": {
 		"user": "root",
 		"password": "root",
-		"disk_size": "3000",
+		"disk_size": "4000",
 		"output_directory": "output/debian",
-		"output_image_name": "solus-debian-10"
+		"output_image_name": "solus-debian-11"
 	},
 
 	"builders": [
 		{
-			"name": "solus.io",
+			"name": "solusvm2",
 			"vm_name": "{{user `output_image_name`}}.qcow2",
 			"type": "qemu",
 			"qemuargs": [
-					[ "-m", "3072m" ]
+					[ "-m", "2048m" ]
 			],
 			"format": "qcow2",
 			"headless": true,
 			"accelerator": "kvm",
 			"disk_size": "{{ user `disk_size` }}",
-			"iso_url": "https://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/debian-10.10.0-amd64-netinst.iso",
-			"iso_checksum": "sha256:c433254a7c5b5b9e6a05f9e1379a0bd6ab3323f89b56537b684b6d1bd1f8b6ad",
+			"iso_url": "https://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/debian-11.6.0-amd64-netinst.iso",
+			"iso_checksum": "file:https://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/SHA256SUMS",
 			"output_directory": "{{user `output_directory`}}",
 			"shutdown_command": "echo 'debian' | sudo -S /sbin/shutdown -hP now",
 			"http_directory": "debian/http",
@@ -41,7 +41,7 @@
 			"boot_command": [
 				"<esc><wait>",
 				"install <wait>",
-				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-debian-10.cfg ",
+				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-debian-11.cfg ",
 				"debian-installer=en_US.UTF-8 <wait>",
 				"auto <wait>",
 				"locale=en_US.UTF-8 <wait>",

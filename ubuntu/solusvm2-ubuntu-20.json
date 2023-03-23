@@ -1,14 +1,14 @@
 {
   "variables": {
-    "user": "centos",
-    "password": "centos",
-    "disk_size": "8000",
-    "output_directory": "output/centos",
-    "output_image_name": "solus-io-centos-7-cpanel"
+    "user": "ubuntu",
+    "password": "ubuntu",
+    "disk_size": "9000",
+    "output_directory": "output/ubuntu",
+    "output_image_name": "solusvm2-ubuntu-20"
   },
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemu_binary": "/usr/libexec/qemu-kvm",
@@ -22,11 +22,11 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://mirror.yandex.ru/centos/7.9.2009/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
-      "iso_checksum": "sha256:07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
+      "iso_url": "http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/mini.iso",
+      "iso_checksum": "sha256:0e79e00bf844929d40825b1f0e8634415cda195ba23bae0b041911fde4dfe018",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "centos/http",
+      "shutdown_command": "echo 'ubuntu' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "ubuntu/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -42,38 +42,40 @@
       "vnc_bind_address": "0.0.0.0",
       "boot_wait": "10s",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos-7.cfg<enter><wait>"
+        "<esc><wait><wait><wait>",
+        "install initrd=/install/initrd.gz ",
+        "auto=true ",
+        "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-ubuntu-20.cfg<wait> ",
+        "language=en ",
+        "country=US ",
+        "locale=en_US.UTF-8 ",
+        "hostname=localhost ",
+        "domain=localdomain ",
+        "interface=auto ",
+        "console-setup/ask_detect=false ",
+        "keyboard-configuration/layoutcode=us ",
+        "vga=788 noprompt quiet --<enter>"
       ]
     }
   ],
   "provisioners": [
     {
       "type": "file",
-      "source": "files/cpanel/rc.local",
+      "source": "ubuntu/files/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "files/cpanel/rc-local.conf",
+      "source": "ubuntu/files/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
-    },
-    {
-      "type": "file",
-      "source": "scripts/cpanel/run_scripts.sh",
-      "destination": "/tmp/run_scripts.sh"
-    },
-    {
-      "type": "shell",
-      "expect_disconnect": true,
-      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
-      "script": "scripts/cpanel/cpanel_install.sh"
     },
     {
       "type": "shell",
       "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
-        "centos/scripts/packages.sh",
-        "scripts/cpanel/configure.sh"
+        "ubuntu/packages.sh",
+        "scripts/configure.sh",
+        "scripts/cleanup.sh"
       ]
     }
   ]

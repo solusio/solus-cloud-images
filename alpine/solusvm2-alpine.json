@@ -9,7 +9,7 @@
 
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemu_binary": "/usr/libexec/qemu-kvm",

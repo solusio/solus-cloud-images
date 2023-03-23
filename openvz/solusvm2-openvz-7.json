@@ -4,12 +4,12 @@
     "password": "openvz",
     "disk_size": "5000",
     "output_directory": "output/openvz",
-    "output_image_name": "solus-openvz-8"
+    "output_image_name": "solus-openvz-7"
   },
 
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemuargs": [
@@ -19,8 +19,8 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://download.openvz.org/virtuozzo/releases/8.0/x86_64/iso/openvz-iso-8.0.0-1336.iso",
-      "iso_checksum": "file:https://download.openvz.org/virtuozzo/releases/8.0/x86_64/iso/sha256sum",
+      "iso_url": "https://download.openvz.org/virtuozzo/releases/7.0/x86_64/iso/openvz-iso-7.0.19-346.iso",
+      "iso_checksum": "file:https://download.openvz.org/virtuozzo/releases/7.0/x86_64/iso/sha256sum",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
       "http_directory": "openvz/data",

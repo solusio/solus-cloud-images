@@ -4,12 +4,12 @@
 		"password": "fedora",
 		"disk_size": "5000",
 		"output_directory": "output/fedora",
-		"output_image_name": "solus.io-fedora-29"
+		"output_image_name": "solusvm2-fedora-29"
 	},
 
 	"builders": [
 		{
-			"name": "solus.io",
+			"name": "solusvm2",
 			"vm_name": "{{user `output_image_name`}}.qcow2",
 			"type": "qemu",
 			"qemuargs": [

@@ -155,7 +155,7 @@ esac
 
 tempkey_rollback
 
-echo "SOLUSIO" > $psa_d/var/cloud_id
+echo "SOLUSVM2 > $psa_d/var/cloud_id
 /usr/local/psa/admin/sbin/nginxmng -d
 /usr/local/psa/admin/sbin/nginxmng -e
 
