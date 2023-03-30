@@ -2,13 +2,13 @@
   "variables": {
     "user": "centos",
     "password": "centos",
-    "disk_size": "6000",
+    "disk_size": "4000",
     "output_directory": "output/centos",
-    "output_image_name": "solus-io-centos-7-plesk"
+    "output_image_name": "solusvm2-centos-7"
   },
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemu_binary": "/usr/libexec/qemu-kvm",
@@ -58,38 +58,12 @@
       "destination": "/tmp/rc-local.conf"
     },
     {
-      "type": "file",
-      "source": "files/plesk/pleskswaprc",
-      "destination": "/tmp/pleskswaprc"
-    },
-    {
-      "type": "shell",
-      "expect_disconnect": true,
-      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
-      "script": "scripts/plesk/install_plesk.sh",
-      "environment_vars": [
-        "IS_SOLUS=true",
-        "INSTALL_BYOL=true",
-        "INSTALL_PLESK_VERSION=18.0.41",
-        "INSTALL_PLESK_PRESET=Recommended",
-        "INSTALL_WITH_PLESK_COMPONENTS=",
-        "INSTALL_WITHOUT_PLESK_COMPONENTS=",
-        "PLESK_TEMPORARY_LICENSE_KEY="
-      ]
-    },
-    {
-      "type": "file",
-      "source": "build/revision",
-      "destination": "/tmp/.image-revision"
-    },
-    {
       "type": "shell",
       "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
         "centos/scripts/packages.sh",
         "scripts/configure.sh",
-        "scripts/plesk/configure.sh",
-        "scripts/plesk/cleanup.sh"
+        "scripts/cleanup.sh"
       ]
     }
   ]

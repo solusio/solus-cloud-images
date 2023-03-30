@@ -2,13 +2,13 @@
   "variables": {
     "user": "ubuntu",
     "password": "ubuntu",
-    "disk_size": "9000",
+    "disk_size": "10500",
     "output_directory": "output/ubuntu",
-    "output_image_name": "solus-io-ubuntu-20"
+    "output_image_name": "solusvm2-ubuntu-20-plesk"
   },
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemu_binary": "/usr/libexec/qemu-kvm",
@@ -70,12 +70,38 @@
       "destination": "/tmp/rc-local.conf"
     },
     {
+      "type": "file",
+      "source": "files/plesk/pleskswaprc",
+      "destination": "/tmp/pleskswaprc"
+    },
+    {
+      "type": "file",
+      "source": "build/revision",
+      "destination": "/tmp/.image-revision"
+    },
+    {
+      "type": "shell",
+      "expect_disconnect": true,
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "scripts/plesk/install_plesk.sh",
+      "environment_vars": [
+        "IS_SOLUS=true",
+        "INSTALL_BYOL=true",
+        "INSTALL_PLESK_VERSION=18.0.51",
+        "INSTALL_PLESK_PRESET=Recommended",
+        "INSTALL_WITH_PLESK_COMPONENTS=",
+        "INSTALL_WITHOUT_PLESK_COMPONENTS=",
+        "PLESK_TEMPORARY_LICENSE_KEY="
+      ]
+    },
+    {
       "type": "shell",
       "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
         "ubuntu/packages.sh",
         "scripts/configure.sh",
-        "scripts/cleanup.sh"
+        "scripts/plesk/configure.sh",
+        "scripts/plesk/cleanup.sh"
       ]
     }
   ]

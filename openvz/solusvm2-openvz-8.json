@@ -1,15 +1,15 @@
 {
   "variables": {
-    "user": "rockylinux",
-    "password": "rockylinux",
-    "disk_size": "4000",
-    "output_directory": "output/rockylinux",
-    "output_image_name": "solus-rockylinux-8"
+    "user": "openvz",
+    "password": "openvz",
+    "disk_size": "5000",
+    "output_directory": "output/openvz",
+    "output_image_name": "solus-openvz-8"
   },
 
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemuargs": [
@@ -19,11 +19,11 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://download.rockylinux.org/pub/rocky/8.4/isos/x86_64/Rocky-8.4-x86_64-boot.iso",
-      "iso_checksum": "file:https://download.rockylinux.org/pub/rocky/8.4/isos/x86_64/CHECKSUM",
+      "iso_url": "https://download.openvz.org/virtuozzo/releases/8.0/x86_64/iso/openvz-iso-8.0.0-1336.iso",
+      "iso_checksum": "file:https://download.openvz.org/virtuozzo/releases/8.0/x86_64/iso/sha256sum",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "rockylinux/data",
+      "http_directory": "openvz/data",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -37,9 +37,15 @@
       "net_device": "virtio-net",
       "disk_interface": "virtio",
       "vnc_bind_address": "0.0.0.0",
-      "boot_wait": "10s",
+      "boot_wait": "2s",
       "boot_command": [
-        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg <enter><wait>"
+        "<down>", "e",
+        "<down><down>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right>",
+        "inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg vz_mand <leftCtrlOn>x<leftCtrlOff>"
       ]
     }
   ],
@@ -47,19 +53,19 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "rockylinux/data/rc.local",
+      "source": "openvz/data/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "rockylinux/data/rc-local.conf",
+      "source": "openvz/data/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
     },
     {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
-        "rockylinux/data/packages.sh",
+        "openvz/data/packages.sh",
         "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]

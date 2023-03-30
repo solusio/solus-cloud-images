@@ -1,17 +1,18 @@
 {
   "variables": {
-    "user": "vzlinux",
-    "password": "vzlinux",
+    "user": "almalinux",
+    "password": "almalinux",
     "disk_size": "4000",
-    "output_directory": "output/vzlinux",
-    "output_image_name": "solus-vzlinux-8"
+    "output_directory": "output/almalinux",
+    "output_image_name": "solus-almalinux-8"
   },
 
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
+      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
         [ "-m", "1900m" ]
       ],
@@ -19,11 +20,11 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "http://repo.virtuozzo.com/vzlinux/8/iso/vzlinux-8-min.iso",
-      "iso_checksum": "sha256:f18a859cd6b9489c2562213c1a8784209eae8d2e1c994bba767d3ab21951d391",
+      "iso_url": "https://repo.almalinux.org/almalinux/8.7/isos/x86_64/AlmaLinux-8.7-x86_64-minimal.iso",
+      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.7/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "vzlinux/data",
+      "http_directory": "almalinux/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -37,15 +38,9 @@
       "net_device": "virtio-net",
       "disk_interface": "virtio",
       "vnc_bind_address": "0.0.0.0",
-      "boot_wait": "2s",
+      "boot_wait": "10s",
       "boot_command": [
-        "<down>", "e",
-        "<down><down>",
-        "<right><right><right><right><right><right><right><right><right><right>",
-        "<right><right><right><right><right><right><right><right><right><right>",
-        "<right><right><right><right><right><right><right><right><right><right>",
-        "<right>",
-        "inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg <leftCtrlOn>x<leftCtrlOff>"
+        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-almalinux-8.cfg <enter><wait>"
       ]
     }
   ],
@@ -53,19 +48,19 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "vzlinux/data/rc.local",
+      "source": "almalinux/files/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "vzlinux/data/rc-local.conf",
+      "source": "almalinux/files/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
     },
     {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
-        "vzlinux/data/packages.sh",
+        "almalinux/scripts/packages.sh",
         "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]

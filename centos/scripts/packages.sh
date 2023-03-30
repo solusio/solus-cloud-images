@@ -5,6 +5,7 @@ set -euxo pipefail
 PACKAGES="
 cloud-init
 cloud-utils-growpart
+gdisk
 qemu-guest-agent
 shim-x64
 grub2-efi-x64

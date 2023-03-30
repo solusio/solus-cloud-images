@@ -32,6 +32,9 @@ clean_garbage()
 	echo -n > /root/.bash_history
 	echo -n > /root/.ash_history
 
+	# Clean /etc/resolv.conf
+	echo -n > /etc/resolv.conf
+
   fstrim --all
   sync
 }

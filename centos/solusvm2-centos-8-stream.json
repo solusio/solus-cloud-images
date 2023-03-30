@@ -4,34 +4,32 @@
     "password": "centos",
     "disk_size": "4000",
     "output_directory": "output/centos",
-    "output_image_name": "solus-io-centos-7"
+    "output_image_name": "solusvm2-centos-8-stream"
   },
+
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
-        [
-          "-m",
-          "2000m"
-        ]
+        [ "-m", "1900m" ]
       ],
       "format": "qcow2",
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://mirror.yandex.ru/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso",
-      "iso_checksum": "sha256:e33d7b1ea7a9e2f38c8f693215dd85254c3a4fe446f93f563279715b68d07987",
+      "iso_url": "http://centos.mirror.far.fi/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-dvd1.iso",
+      "iso_checksum": "file:http://centos.mirror.far.fi/8-stream/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
       "http_directory": "centos/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
-      "host_port_min": 2222,
-      "host_port_max": 4444,
+      "host_port_min" : 2222,
+      "host_port_max" : 4444,
       "vnc_port_min": 5901,
       "vnc_port_max": 6000,
       "http_port_min": 8501,
@@ -42,10 +40,11 @@
       "vnc_bind_address": "0.0.0.0",
       "boot_wait": "10s",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos-7.cfg<enter><wait>"
+        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-centos-8.cfg <enter><wait>"
       ]
     }
   ],
+
   "provisioners": [
     {
       "type": "file",
@@ -59,7 +58,7 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
+      "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "centos/scripts/packages.sh",
         "scripts/configure.sh",

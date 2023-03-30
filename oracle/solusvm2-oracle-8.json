@@ -1,37 +1,36 @@
 {
   "variables": {
-    "user": "almalinux",
-    "password": "almalinux",
+    "user": "oracle",
+    "password": "oracle",
     "disk_size": "4000",
-    "output_directory": "output/almalinux",
-    "output_image_name": "solus-almalinux-9"
+    "output_directory": "output/oracle",
+    "output_image_name": "solusvm2-oracle-8"
   },
 
   "builders": [
     {
-      "name": "solus",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
-        [ "-m", "1900m" ],
-        [ "-cpu", "host" ]
+        [ "-m", "1900m" ]
       ],
       "format": "qcow2",
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9-latest-x86_64-minimal.iso",
-      "iso_checksum": "sha256:63ae680790f71d56ddc5f050d5bcd1caf34824241f0861876f75194f75a3894f",
+      "iso_url": "https://yum.oracle.com/ISOS/OracleLinux/OL8/u4/x86_64/x86_64-boot.iso",
+      "iso_checksum": "sha256:b92b49553690420053b32dff54c7cce89463eb98c35a1b57706b7408a2ec24bc",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "almalinux/http",
+      "shutdown_command": "echo '{{ user `password` }}' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "oracle/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
       "host_port_min" : 2222,
       "host_port_max" : 4444,
-      "vnc_port_min": 5901,
+      "vnc_port_min": 5900,
       "vnc_port_max": 6000,
       "http_port_min": 8501,
       "http_port_max": 8501,
@@ -41,7 +40,7 @@
       "vnc_bind_address": "0.0.0.0",
       "boot_wait": "10s",
       "boot_command": [
-        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-almalinux-9.cfg <enter><wait>"
+        "<tab> linux ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-oracle-8.cfg <enter><wait>"
       ]
     }
   ],
@@ -49,19 +48,19 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "almalinux/files/rc.local",
+      "source": "oracle/files/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "almalinux/files/rc-local.conf",
+      "source": "oracle/files/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
     },
     {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
-        "almalinux/scripts/packages.sh",
+        "oracle/scripts/packages.sh",
         "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]

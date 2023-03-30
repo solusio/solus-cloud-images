@@ -1,18 +1,17 @@
 {
   "variables": {
-    "user": "centos",
-    "password": "centos",
+    "user": "vzlinux",
+    "password": "vzlinux",
     "disk_size": "4000",
-    "output_directory": "output/centos",
-    "output_image_name": "solus-io-centos-8"
+    "output_directory": "output/vzlinux",
+    "output_image_name": "solus-vzlinux-8"
   },
 
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
         [ "-m", "1900m" ]
       ],
@@ -20,11 +19,11 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://mirror.yandex.ru/centos/8/isos/x86_64/CentOS-8.2.2004-x86_64-dvd1.iso",
-      "iso_checksum": "sha256:c87a2d81d67bbaeaf646aea5bedd70990078ec252fc52f5a7d65ff609871e255",
+      "iso_url": "http://repo.virtuozzo.com/vzlinux/8/iso/vzlinux-8-min.iso",
+      "iso_checksum": "sha256:f18a859cd6b9489c2562213c1a8784209eae8d2e1c994bba767d3ab21951d391",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "centos/http",
+      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "vzlinux/data",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -38,9 +37,15 @@
       "net_device": "virtio-net",
       "disk_interface": "virtio",
       "vnc_bind_address": "0.0.0.0",
-      "boot_wait": "10s",
+      "boot_wait": "2s",
       "boot_command": [
-        "<tab> linux ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-centos-8.cfg <enter><wait>"
+        "<down>", "e",
+        "<down><down>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right><right><right><right><right><right><right><right><right><right>",
+        "<right>",
+        "inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg <leftCtrlOn>x<leftCtrlOff>"
       ]
     }
   ],
@@ -48,19 +53,19 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "centos/files/rc.local",
+      "source": "vzlinux/data/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "centos/files/rc-local.conf",
+      "source": "vzlinux/data/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
     },
     {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
-        "centos/scripts/packages.sh",
+        "vzlinux/data/packages.sh",
         "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]

@@ -1,15 +1,15 @@
-# SolusIO OS Images Builder
+# SolusVM 2 OS Images Builder
 
-The repository was created by the SolusIO team. 
+The repository was created by the SolusVM 2 team. 
 
-SolusIO comes with a number of OS images available out of the box.
-However you may want to build your custom OS images (with desired parameters, installed packages, OS versions, and so on).
+SolusVM 2 comes with a number of OS images available out of the box.
+However, you may want to build your custom OS images (with desired parameters, installed packages, OS versions, and so on).
 
 This repository will help you do so. It contains a number of scripts and configs 
 to help you build custom `cloud-init` compatible QEMU/KVM OS images.
 
-**Note:** SolusIO OS Images Builder was tested and it works on CentOS servers.
-We сannot guarantee that it will work on Ubuntu or Debian.
+**Note:** SolusVM 2 OS Images Builder was tested and it works on CentOS servers.
+We cannot guarantee that it will work on Ubuntu or Debian.
 
 ## 1. Checking prerequisites
 
@@ -80,7 +80,7 @@ It will help you monitor the build and promptly see any errors if they occur.
 
 If you see the following error:
 ```
-Build 'solus.io' errored: Failed creating Qemu driver: exec: "qemu-system-x86_64": executable file not found in $PATH
+Build 'solusvm2' errored: Failed creating Qemu driver: exec: "qemu-system-x86_64": executable file not found in $PATH
 ```
 Then create a symbolic link from `/usr/libexec/qemu-kvm` to `/usr/libexec/qemu-system-x86_64`:
  

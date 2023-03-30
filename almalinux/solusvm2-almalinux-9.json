@@ -1,29 +1,31 @@
 {
   "variables": {
-    "user": "openvz",
-    "password": "openvz",
-    "disk_size": "5000",
-    "output_directory": "output/openvz",
-    "output_image_name": "solus-openvz-7"
+    "user": "almalinux",
+    "password": "almalinux",
+    "disk_size": "4000",
+    "output_directory": "output/almalinux",
+    "output_image_name": "solus-almalinux-9"
   },
 
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
+      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
-        [ "-m", "1900m" ]
+        [ "-m", "1900m" ],
+        [ "-cpu", "host" ]
       ],
       "format": "qcow2",
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://download.openvz.org/virtuozzo/releases/7.0/x86_64/iso/openvz-iso-7.0.17-347.iso",
-      "iso_checksum": "file:https://download.openvz.org/virtuozzo/releases/7.0/x86_64/iso/sha256sum",
+      "iso_url": "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9-latest-x86_64-minimal.iso",
+      "iso_checksum": "sha256:63ae680790f71d56ddc5f050d5bcd1caf34824241f0861876f75194f75a3894f",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "openvz/data",
+      "http_directory": "almalinux/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -37,15 +39,9 @@
       "net_device": "virtio-net",
       "disk_interface": "virtio",
       "vnc_bind_address": "0.0.0.0",
-      "boot_wait": "2s",
+      "boot_wait": "10s",
       "boot_command": [
-        "<down>", "e",
-        "<down><down>",
-        "<right><right><right><right><right><right><right><right><right><right>",
-        "<right><right><right><right><right><right><right><right><right><right>",
-        "<right><right><right><right><right><right><right><right><right><right>",
-        "<right>",
-        "inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg vz_mand <leftCtrlOn>x<leftCtrlOff>"
+        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-almalinux-9.cfg <enter><wait>"
       ]
     }
   ],
@@ -53,19 +49,19 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "openvz/data/rc.local",
+      "source": "almalinux/files/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "openvz/data/rc-local.conf",
+      "source": "almalinux/files/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
     },
     {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
-        "openvz/data/packages.sh",
+        "almalinux/scripts/packages.sh",
         "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]

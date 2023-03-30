@@ -1,14 +1,14 @@
 {
   "variables": {
-    "user": "ubuntu",
-    "password": "ubuntu",
-    "disk_size": "9000",
-    "output_directory": "output/ubuntu",
-    "output_image_name": "solus-io-ubuntu-18"
+    "user": "centos",
+    "password": "centos",
+    "disk_size": "6000",
+    "output_directory": "output/centos",
+    "output_image_name": "solusvm2-centos-7-plesk"
   },
   "builders": [
     {
-      "name": "solus.io",
+      "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemu_binary": "/usr/libexec/qemu-kvm",
@@ -22,11 +22,11 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso",
-      "iso_checksum": "sha256:bed8a55ae2a657f8349fe3271097cff3a5b8c3d1048cf258568f1601976fa30d",
+      "iso_url": "https://mirror.yandex.ru/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso",
+      "iso_checksum": "sha256:e33d7b1ea7a9e2f38c8f693215dd85254c3a4fe446f93f563279715b68d07987",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'ubuntu' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "ubuntu/http",
+      "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "centos/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -42,31 +42,19 @@
       "vnc_bind_address": "0.0.0.0",
       "boot_wait": "10s",
       "boot_command": [
-        "<esc><wait><wait><wait>",
-        "install initrd=/install/initrd.gz ",
-        "auto=true ",
-        "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-ubuntu-18.cfg<wait> ",
-        "language=en ",
-        "country=US ",
-        "locale=en_US.UTF-8 ",
-        "hostname=localhost ",
-        "domain=localdomain ",
-        "interface=auto ",
-        "console-setup/ask_detect=false ",
-        "keyboard-configuration/layoutcode=us ",
-        "vga=788 noprompt quiet --<enter>"
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos-7.cfg<enter><wait>"
       ]
     }
   ],
   "provisioners": [
     {
       "type": "file",
-      "source": "ubuntu/files/rc.local",
+      "source": "centos/files/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "ubuntu/files/rc-local.conf",
+      "source": "centos/files/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
     },
     {
@@ -76,11 +64,32 @@
     },
     {
       "type": "shell",
+      "expect_disconnect": true,
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "scripts/plesk/install_plesk.sh",
+      "environment_vars": [
+        "IS_SOLUS=true",
+        "INSTALL_BYOL=true",
+        "INSTALL_PLESK_VERSION=18.0.51",
+        "INSTALL_PLESK_PRESET=Recommended",
+        "INSTALL_WITH_PLESK_COMPONENTS=",
+        "INSTALL_WITHOUT_PLESK_COMPONENTS=",
+        "PLESK_TEMPORARY_LICENSE_KEY="
+      ]
+    },
+    {
+      "type": "file",
+      "source": "build/revision",
+      "destination": "/tmp/.image-revision"
+    },
+    {
+      "type": "shell",
       "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
-        "ubuntu/packages.sh",
+        "centos/scripts/packages.sh",
         "scripts/configure.sh",
-        "scripts/cleanup.sh"
+        "scripts/plesk/configure.sh",
+        "scripts/plesk/cleanup.sh"
       ]
     }
   ]
