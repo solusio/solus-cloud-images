@@ -51,11 +51,11 @@ usage() {
       alpine                      Alpine images
       oracle-8                    Oracle Linux 8 images
       almalinux-8                 AlmaLinux 8 images
-      almalinux-8-plesk           AlmaLinux 8 images with Plesk
+      almalinux-8-cpanel          cPanel on AlmaLinux 8 image
+      almalinux-8-plesk           AlmaLinux 8 image with Plesk
       almalinux-9                 AlmaLinux 9 images
       rockylinux-8                RockyLinux 8 images
       vzlinux-8                   VzLinux 8 images
-      cpanel-7                    cPanel on centos 7 images
       openvz-7                    OpenVZ 7 images
       openvz-8                    OpenVZ 8 images
 
@@ -119,15 +119,21 @@ do_build() {
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
-  almalinux-9)
-    inten="Build AlmaLinux 9 cloud-init image"
-    config="almalinux/solus-almalinux-9.json"
+  almalinux-8-plesk)
+    inten="Build Plesk on AlmaLinux 8"
+    config="almalinux/solus-almalinux-8-plesk.json"
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
-  almalinux-8-plesk )
-    inten="Build AlmaLinux 8 cloud-init image"
-    config="almalinux/solus-almalinux-8-plesk.json"
+  almalinux-8-cpanel)
+    inten="Build cPanel on AlmaLinux 8"
+    config="almalinux/solusvm2-almalinux-8-cpanel.json"
+    image_path="output/almalinux"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  almalinux-9)
+    inten="Build AlmaLinux 9 cloud-init image"
+    config="almalinux/solus-almalinux-9.json"
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -164,12 +170,6 @@ do_build() {
   centos-7)
     inten="Build centos 7 cloud-init image"
     config="centos/solusvm2-centos-7.json"
-    image_path="output/centos"
-    [[ ! -d image_path ]] || rm -rf image_path
-    ;;
-  cpanel-7)
-    inten="Build cpanel on centos 7 cloud-init image"
-    config="centos/solusvm2-centos-7-cpanel.json"
     image_path="output/centos"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -332,7 +332,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 almalinux-9 almalinux-8-plesk alpine centos-7 cpanel-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk"
+image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
