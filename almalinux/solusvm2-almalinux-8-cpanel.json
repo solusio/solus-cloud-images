@@ -1,32 +1,29 @@
 {
   "variables": {
-    "user": "centos",
-    "password": "centos",
+    "user": "almalinux",
+    "password": "almalinux",
     "disk_size": "8000",
-    "output_directory": "output/centos",
-    "output_image_name": "solusvm2-centos-7-cpanel"
+    "output_directory": "output/almalinux",
+    "output_image_name": "solusvm2-almalinux-8-cpanel"
   },
   "builders": [
     {
       "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
-        [
-          "-m",
-          "2000m"
-        ]
+        [ "-m", "1900m" ],
+        [ "-cpu", "host" ]
       ],
       "format": "qcow2",
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://mirror.yandex.ru/centos/7.9.2009/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso",
-      "iso_checksum": "sha256:07b94e6b1a0b0260b94c83d6bb76b26bf7a310dc78d7a9c7432809fb9bc6194a",
+      "iso_url": "https://repo.almalinux.org/almalinux/8.8/isos/x86_64/AlmaLinux-8.8-x86_64-minimal.iso",
+      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.8/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
-      "http_directory": "centos/http",
+      "http_directory": "almalinux/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
       "disk_compression": true,
@@ -42,38 +39,38 @@
       "vnc_bind_address": "0.0.0.0",
       "boot_wait": "10s",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos-7.cfg<enter><wait>"
+        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-almalinux-9.cfg <enter><wait>"
       ]
     }
   ],
   "provisioners": [
     {
       "type": "file",
-      "source": "files/cpanel/rc.local",
+      "source": "almalinux/files/cpanel/rc.local",
       "destination": "/tmp/rc.local"
     },
     {
       "type": "file",
-      "source": "files/cpanel/rc-local.conf",
+      "source": "almalinux/files/cpanel/rc-local.conf",
       "destination": "/tmp/rc-local.conf"
     },
     {
       "type": "file",
-      "source": "scripts/cpanel/run_scripts.sh",
+      "source": "almalinux/scripts/cpanel/run_scripts.sh",
       "destination": "/tmp/run_scripts.sh"
     },
     {
       "type": "shell",
       "expect_disconnect": true,
       "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
-      "script": "scripts/cpanel/cpanel_install.sh"
+      "script": "almalinux/scripts/cpanel/cpanel_install.sh"
     },
     {
       "type": "shell",
       "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
-        "centos/scripts/packages.sh",
-        "scripts/cpanel/configure.sh"
+        "almalinux/scripts/packages.sh",
+        "almalinux/scripts/cpanel/configure.sh"
       ]
     }
   ]
