@@ -115,13 +115,13 @@ do_build() {
   case "$opt_type" in
   almalinux-8)
     inten="Build AlmaLinux 8 cloud-init image"
-    config="almalinux/solus-almalinux-8.json"
+    config="almalinux/solusvm2-almalinux-8.json"
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
   almalinux-8-plesk)
     inten="Build Plesk on AlmaLinux 8"
-    config="almalinux/solus-almalinux-8-plesk.json"
+    config="almalinux/solusvm2-almalinux-8-plesk.json"
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -133,7 +133,7 @@ do_build() {
     ;;
   almalinux-9)
     inten="Build AlmaLinux 9 cloud-init image"
-    config="almalinux/solus-almalinux-9.json"
+    config="almalinux/solusvm2-almalinux-9.json"
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
