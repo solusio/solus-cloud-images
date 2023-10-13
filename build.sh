@@ -42,6 +42,7 @@ usage() {
       ubuntu-18-plesk             Ubuntu 18.04 images with Plesk
       ubuntu-20                   Ubuntu 20.04 images
       ubuntu-20-plesk             Ubuntu 20.04 images with Plesk
+      ubuntu-20-cpanel            Ubuntu 20.04 images with cPanel
       fedora                      Fedora  images
       centos-7                    CentOS 7 images
       centos-7-plesk              CentOS 7 images with Plesk
@@ -221,6 +222,12 @@ do_build() {
     image_path="output/ubuntu"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
+  ubuntu-20-cpanel)
+    inten="Build cPanel ubuntu 20 cloud-init image"
+    config="ubuntu/solusvm2-ubuntu-20-cpanel.json"
+    image_path="output/ubuntu"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
   vzlinux-8)
     inten="Build VzLinux 8 cloud-init image"
     config="vzlinux/solusvm2-vzlinux-8.json"
@@ -332,7 +339,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk"
+image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"

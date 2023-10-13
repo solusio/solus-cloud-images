@@ -1,0 +1,93 @@
+{
+  "variables": {
+    "user": "ubuntu",
+    "password": "ubuntu",
+    "disk_size": "10000",
+    "output_directory": "output/ubuntu",
+    "output_image_name": "solusvm2-ubuntu-20-cpanel"
+  },
+  "builders": [
+    {
+      "name": "solusvm2",
+      "vm_name": "{{user `output_image_name`}}.qcow2",
+      "type": "qemu",
+      "qemu_binary": "/usr/libexec/qemu-kvm",
+      "qemuargs": [
+        [
+          "-m",
+          "2000m"
+        ]
+      ],
+      "format": "qcow2",
+      "headless": true,
+      "accelerator": "kvm",
+      "disk_size": "{{ user `disk_size` }}",
+      "iso_url": "http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/mini.iso",
+      "iso_checksum": "sha256:0e79e00bf844929d40825b1f0e8634415cda195ba23bae0b041911fde4dfe018",
+      "output_directory": "{{user `output_directory`}}",
+      "shutdown_command": "echo 'ubuntu' | sudo -S /sbin/shutdown -hP now",
+      "http_directory": "ubuntu/http",
+      "ssh_username": "{{ user `user` }}",
+      "ssh_password": "{{ user `password` }}",
+      "disk_compression": true,
+      "host_port_min": 2222,
+      "host_port_max": 4444,
+      "vnc_port_min": 5901,
+      "vnc_port_max": 6000,
+      "http_port_min": 8501,
+      "http_port_max": 8501,
+      "ssh_wait_timeout": "40m",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "vnc_bind_address": "0.0.0.0",
+      "boot_wait": "10s",
+      "boot_command": [
+        "<esc><wait><wait><wait>",
+        "install initrd=/install/initrd.gz ",
+        "auto=true ",
+        "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-ubuntu-20.cfg<wait> ",
+        "language=en ",
+        "country=US ",
+        "locale=en_US.UTF-8 ",
+        "hostname=localhost ",
+        "domain=localdomain ",
+        "interface=auto ",
+        "console-setup/ask_detect=false ",
+        "keyboard-configuration/layoutcode=us ",
+        "vga=788 noprompt quiet --<enter>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "ubuntu/files/cpanel/rc.local",
+      "destination": "/tmp/rc.local"
+    },
+    {
+      "type": "file",
+      "source": "ubuntu/files/cpanel/rc-local.conf",
+      "destination": "/tmp/rc-local.conf"
+    },
+    {
+      "type": "file",
+      "source": "ubuntu/scripts/cpanel/run_scripts.sh",
+      "destination": "/tmp/run_scripts.sh"
+    },
+    {
+      "type": "shell",
+      "expect_disconnect": true,
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "ubuntu/scripts/cpanel/cpanel_install.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
+      "scripts": [
+        "ubuntu/packages.sh",
+        "ubuntu/scripts/cpanel/configure.sh",
+	"ubuntu/scripts/cpanel/cleanup.sh"
+      ]
+    }
+  ]
+}
