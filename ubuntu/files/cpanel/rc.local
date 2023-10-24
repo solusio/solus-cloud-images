@@ -1,0 +1,36 @@
+#!/bin/bash
+
+clear_user(){
+	rm -f /etc/sudoers.d/*
+	for user in ubuntu; do
+		userdel --force --remove "$user" || passwd -l "$user" || true
+		rm -rf "/home/$user/"
+	done
+}
+
+clean_up(){
+	rm -rf /lib/systemd/system/rc-local.service.d
+	rm -rf /etc/rc.local
+	rm -rf /etc/subgid.lock
+}
+
+
+cpanel_post_install() {
+  sh /root/run_scripts.sh
+}
+
+cpanel_regenerate_token() {
+    /usr/local/cpanel/scripts/regenerate_tokens
+}
+
+clear_user
+
+cpanel_regenerate_token
+cpanel_post_install
+
+
+cloud-init init # to generate host ssh keys
+cloud-init modules --mode=config
+cloud-init modules --mode=final
+
+clean_up
