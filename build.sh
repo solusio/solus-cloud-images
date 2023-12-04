@@ -56,6 +56,7 @@ usage() {
       almalinux-8-plesk           AlmaLinux 8 image with Plesk
       almalinux-9                 AlmaLinux 9 images
       rockylinux-8                RockyLinux 8 images
+      rockylinux-9                RockyLinux 9 images
       vzlinux-8                   VzLinux 8 images
       openvz-7                    OpenVZ 7 images
       openvz-8                    OpenVZ 8 images
@@ -163,8 +164,8 @@ do_build() {
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
   fedora)
-    inten="Build fedora 29 cloud-init image"
-    config="fedora/solusvm2-fedora-29.json"
+    inten="Build fedora image"
+    config="fedora/solusvm2-fedora-39.json"
     image_path="output/fedora"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -195,6 +196,12 @@ do_build() {
   rockylinux-8)
     inten="Build RockyLinux 8 cloud-init image"
     config="rockylinux/solusvm2-rockylinux-8.json"
+    image_path="output/rockylinux"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  rockylinux-9)
+    inten="Build RockyLinux 9 cloud-init image"
+    config="rockylinux/solusvm2-rockylinux-9.json"
     image_path="output/rockylinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -339,7 +346,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk"
+image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 rockylinux-9 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"

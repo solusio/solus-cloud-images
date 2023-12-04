@@ -4,7 +4,7 @@
 		"password": "fedora",
 		"disk_size": "5000",
 		"output_directory": "output/fedora",
-		"output_image_name": "solusvm2-fedora-29"
+		"output_image_name": "solusvm2-fedora-39"
 	},
 
 	"builders": [
@@ -19,27 +19,36 @@
 			"headless": true,
 			"accelerator": "kvm",
 			"disk_size": "{{ user `disk_size` }}",
-			"iso_url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Server/x86_64/iso/Fedora-Server-netinst-x86_64-29-1.2.iso",
-			"iso_checksum": "sha256:aa7fb0e6e5b71774ebdaab0dae76bdd9246a5bc7aedc28b7f1103aaaf9750654",
+			"iso_url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/39/Server/x86_64/iso/Fedora-Server-dvd-x86_64-39-1.5.iso",
+			"iso_checksum": "sha256:2755cdff6ac6365c75be60334bf1935ade838fc18de53d4c640a13d3e904f6e9",
 			"output_directory": "{{user `output_directory`}}",
 			"shutdown_command": "echo 'fedora' | sudo -S /sbin/shutdown -hP now",
-			"http_directory": "http",
+			"http_directory": "fedora/http",
 			"ssh_username": "{{ user `user` }}",
 			"ssh_password": "{{ user `password` }}",
 			"disk_compression": true,
 			"host_port_min" : 2222,
 			"host_port_max" : 4444,
 			"vnc_port_min": 5901,
-			"vnc_port_max": 5901,
+			"vnc_port_max": 6000,
 			"http_port_min": 8501,
 			"http_port_max": 8501,
 			"ssh_wait_timeout": "40m",
 			"net_device": "virtio-net",
 			"disk_interface": "virtio",
 			"vnc_bind_address": "0.0.0.0",
-			"boot_wait": "10s",
+			"boot_wait": "15s",
 			"boot_command": [
-				"<tab> linux ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-fedora29.cfg <enter><wait>"
+				"<up>", "e",
+				"<down><down>",
+				"<right><right><right><right><right><right><right><right><right><right>",
+				"<right><right><right><right><right><right><right><right><right><right>",
+				"<right><right><right><right><right><right><right><right><right><right>",
+				"<right>",
+				"<del><del><del><del><del><del><del><del><del><del><del><del><del><del><del>",
+				"<del><del><del><del><del><del><del><del><del><del><del><del><del><del><del>",
+				"<del><del><del><del><del><del><del><del><del><del><del><del><del><del><del>",
+				"inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-fedora-39.cfg mand <leftCtrlOn>x<leftCtrlOff>"
 			]
 		}
 	],
@@ -47,21 +56,21 @@
 	"provisioners": [
 		{
 			"type": "file",
-			"source": "files/rc.local-fedora",
+			"source": "fedora/files/rc.local-fedora",
 			"destination": "/tmp/rc.local"
 		},
 		{
 			"type": "file",
-			"source": "files/rc-local-fedora.conf",
+			"source": "fedora/files/rc-local-fedora.conf",
 			"destination": "/tmp/rc-local.conf"
 		},
 		{
 			"type": "shell",
 			"execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
 			"scripts": [
-				"scripts/packages.sh",
-				"scripts/configure.sh",
-				"scripts/cleanup.sh"
+				"fedora/scripts/packages.sh",
+				"fedora/scripts/configure.sh",
+				"fedora/scripts/cleanup.sh"
 			]
 		}
 	]

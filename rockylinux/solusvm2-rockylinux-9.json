@@ -4,7 +4,7 @@
     "password": "rockylinux",
     "disk_size": "4000",
     "output_directory": "output/rockylinux",
-    "output_image_name": "solus-rockylinux-8"
+    "output_image_name": "solus-rockylinux-9"
   },
 
   "builders": [
@@ -13,14 +13,15 @@
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
       "qemuargs": [
-        [ "-m", "1900m" ]
+        [ "-m", "1900m" ],
+        [ "-cpu", "host" ]
       ],
       "format": "qcow2",
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://download.rockylinux.org/pub/rocky/8.7/isos/x86_64/Rocky-8.7-x86_64-boot.iso",
-      "iso_checksum": "file:https://download.rockylinux.org/pub/rocky/8.7/isos/x86_64/CHECKSUM",
+      "iso_url": "https://download.rockylinux.org/pub/rocky/9.3/isos/x86_64/Rocky-9.3-x86_64-boot.iso",
+      "iso_checksum": "file:https://download.rockylinux.org/pub/rocky/9.3/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
       "http_directory": "rockylinux/data",
@@ -39,7 +40,7 @@
       "vnc_bind_address": "0.0.0.0",
       "boot_wait": "10s",
       "boot_command": [
-        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-rockylinux-8.cfg <enter><wait>"
+        "<tab> linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-rockylinux-9.cfg <enter><wait>"
       ]
     }
   ],
