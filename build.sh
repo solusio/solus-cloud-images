@@ -1,5 +1,5 @@
 #!/bin/bash
-### Copyright 2020 Plesk International GmbH. All rights reserved.
+### Copyright 1999-2024. WebPros International GmbH. All rights reserved.
 
 set -euo pipefail
 
