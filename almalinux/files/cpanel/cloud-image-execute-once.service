@@ -1,0 +1,14 @@
+[Unit]
+Description=Cloud Image Execute Once
+ConditionPathExists=/etc/execute-once.sh
+After=cloud-init.service ssh.service
+
+[Service]
+Type=forking
+ExecStart=/etc/execute-once.sh
+TimeoutSec=0
+StandardOutput=tty
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
