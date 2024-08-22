@@ -165,7 +165,7 @@ do_build() {
     ;;
   fedora)
     inten="Build fedora image"
-    config="fedora/solusvm2-fedora-39.json"
+    config="fedora/solusvm2-fedora-latest.json"
     image_path="output/fedora"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
