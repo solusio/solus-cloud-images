@@ -4,6 +4,26 @@ set -euxo pipefail
 
 clean_garbage()
 {
+  # Lock root password
+  passwd -l root
+
+	# Clean SSH Host Key Pairs
+	rm -rf /etc/ssh/*_key /etc/ssh/*_key.pub
+
+	if [[ -d /root/.ssh ]]; then
+		# Clean keys for root user
+		rm -f /root/.ssh/authorized_keys
+
+		echo -n > /root/.ssh/known_hosts
+		chmod 0644 /root/.ssh/known_hosts
+	fi
+
+  rm -f /etc/sudoers.d/*
+  for user in almalinux alpine centos debian fedora openvz oracle rockylinux ubuntu vzlinux; do
+  	userdel --force --remove "$user" || passwd -l "$user" || true
+  	rm -rf "/home/${user:?}/"
+  done
+
 	# Clean package manager caches
 	if [[ -f "/usr/bin/apt-get" ]]; then
 		if ! apt-get clean; then
@@ -32,20 +52,6 @@ clean_garbage()
 
 	# Clean /tmp
 	rm -rf /tmp/*
-
-	# Clean SSH Host Key Pairs
-	rm -rf /etc/ssh/*_key /etc/ssh/*_key.pub
-
-	if [[ -d /root/.ssh ]]; then
-		# Clean keys for root user
-		rm -f /root/.ssh/authorized_keys
-
-		echo -n > /root/.ssh/known_hosts
-		chmod 0644 /root/.ssh/known_hosts
-	fi
-
-  # Lock root password
-  passwd -l root
 
 	# Clean up log files
 	find /var/log -type f | while read f; do echo -ne '' > ${f}; done;

@@ -4,6 +4,12 @@ set -xe
 
 psa_d="/usr/local/psa"
 
+use_centos_vault_repo()
+{
+  sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+  sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+}
+
 do_prepare()
 {
 	## Set hostname (avoid mk_reverse_zone failure)
@@ -125,8 +131,11 @@ tempkey_rollback()
 
 ##----------------------------------------------------------------------------------------------
 
-[ -z "$IS_SOLUS" ] || instance_type="solus"
+if [ -n "$USE_CENTOS_VAULT_REPO" ]; then
+  use_centos_vault_repo
+fi
 
+[ -z "$IS_SOLUS" ] || instance_type="solus"
 [ -z "$INSTALL_BYOL" ] || install_type="byol"
 [ -z "$INSTALL_BUSINESS" ] || install_type="business"
 [ -z "$INSTALL_WEBHOST" ] || install_type="webhost"
@@ -155,7 +164,7 @@ esac
 
 tempkey_rollback
 
-echo "SOLUSVM2 > $psa_d/var/cloud_id
+echo "SOLUSVM2" > $psa_d/var/cloud_id
 /usr/local/psa/admin/sbin/nginxmng -d
 /usr/local/psa/admin/sbin/nginxmng -e
 

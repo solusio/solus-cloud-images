@@ -1,7 +1,7 @@
 {
   "variables": {
-    "user": "centos",
-    "password": "centos",
+    "user": "root",
+    "password": "root",
     "disk_size": "4000",
     "output_directory": "output/centos",
     "output_image_name": "solusvm2-centos-7"
@@ -11,7 +11,6 @@
       "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
         [
           "-m",
@@ -25,7 +24,7 @@
       "iso_url": "https://mirror.yandex.ru/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso",
       "iso_checksum": "sha256:e33d7b1ea7a9e2f38c8f693215dd85254c3a4fe446f93f563279715b68d07987",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
+      "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "centos/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
@@ -33,7 +32,7 @@
       "host_port_min": 2222,
       "host_port_max": 4444,
       "vnc_port_min": 5901,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",
@@ -48,21 +47,10 @@
   ],
   "provisioners": [
     {
-      "type": "file",
-      "source": "centos/files/rc.local",
-      "destination": "/tmp/rc.local"
-    },
-    {
-      "type": "file",
-      "source": "centos/files/rc-local.conf",
-      "destination": "/tmp/rc-local.conf"
-    },
-    {
       "type": "shell",
       "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
         "centos/scripts/packages.sh",
-        "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]
     }

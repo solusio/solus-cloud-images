@@ -1,7 +1,7 @@
 {
   "variables": {
-    "user": "oracle",
-    "password": "oracle",
+    "user": "root",
+    "password": "root",
     "disk_size": "4000",
     "output_directory": "output/oracle",
     "output_image_name": "solusvm2-oracle-8"
@@ -12,7 +12,6 @@
       "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
         [ "-m", "1900m" ]
       ],
@@ -23,7 +22,7 @@
       "iso_url": "https://yum.oracle.com/ISOS/OracleLinux/OL8/u4/x86_64/x86_64-boot.iso",
       "iso_checksum": "sha256:b92b49553690420053b32dff54c7cce89463eb98c35a1b57706b7408a2ec24bc",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo '{{ user `password` }}' | sudo -S /sbin/shutdown -hP now",
+      "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "oracle/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
@@ -31,7 +30,7 @@
       "host_port_min" : 2222,
       "host_port_max" : 4444,
       "vnc_port_min": 5900,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",
@@ -47,21 +46,10 @@
 
   "provisioners": [
     {
-      "type": "file",
-      "source": "oracle/files/rc.local",
-      "destination": "/tmp/rc.local"
-    },
-    {
-      "type": "file",
-      "source": "oracle/files/rc-local.conf",
-      "destination": "/tmp/rc-local.conf"
-    },
-    {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "oracle/scripts/packages.sh",
-        "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]
     }

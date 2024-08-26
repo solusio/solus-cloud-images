@@ -1,7 +1,7 @@
 {
   "variables": {
-    "user": "rockylinux",
-    "password": "rockylinux",
+    "user": "root",
+    "password": "root",
     "disk_size": "4000",
     "output_directory": "output/rockylinux",
     "output_image_name": "solus-rockylinux-9"
@@ -23,7 +23,7 @@
       "iso_url": "https://download.rockylinux.org/pub/rocky/9.3/isos/x86_64/Rocky-9.3-x86_64-boot.iso",
       "iso_checksum": "file:https://download.rockylinux.org/pub/rocky/9.3/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
+      "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "rockylinux/data",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
@@ -31,7 +31,7 @@
       "host_port_min" : 2222,
       "host_port_max" : 4444,
       "vnc_port_min": 5901,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",
@@ -47,21 +47,10 @@
 
   "provisioners": [
     {
-      "type": "file",
-      "source": "rockylinux/data/rc.local",
-      "destination": "/tmp/rc.local"
-    },
-    {
-      "type": "file",
-      "source": "rockylinux/data/rc-local.conf",
-      "destination": "/tmp/rc-local.conf"
-    },
-    {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "rockylinux/data/packages.sh",
-        "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]
     }

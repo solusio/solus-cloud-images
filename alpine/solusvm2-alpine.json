@@ -12,7 +12,6 @@
       "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
         [ "-m", "1900m" ]
       ],
@@ -31,7 +30,7 @@
       "host_port_min" : 2222,
       "host_port_max" : 4444,
       "vnc_port_min": 5901,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",

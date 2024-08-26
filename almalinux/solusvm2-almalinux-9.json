@@ -1,7 +1,7 @@
 {
   "variables": {
-    "user": "almalinux",
-    "password": "almalinux",
+    "user": "root",
+    "password": "root",
     "disk_size": "4000",
     "output_directory": "output/almalinux",
     "output_image_name": "solus-almalinux-9"
@@ -23,7 +23,7 @@
       "iso_url": "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9-latest-x86_64-minimal.iso",
       "iso_checksum": "sha256:51ee8c6dd6b27dcae16d4c11d58815d6cfaf464eb0e7c75e026f8d5cc530b476",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
+      "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "almalinux/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
@@ -31,7 +31,7 @@
       "host_port_min" : 2222,
       "host_port_max" : 4444,
       "vnc_port_min": 5901,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",
@@ -47,21 +47,10 @@
 
   "provisioners": [
     {
-      "type": "file",
-      "source": "almalinux/files/rc.local",
-      "destination": "/tmp/rc.local"
-    },
-    {
-      "type": "file",
-      "source": "almalinux/files/rc-local.conf",
-      "destination": "/tmp/rc-local.conf"
-    },
-    {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "almalinux/scripts/packages.sh",
-        "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]
     }

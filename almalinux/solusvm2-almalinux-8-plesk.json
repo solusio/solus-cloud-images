@@ -1,7 +1,7 @@
 {
   "variables": {
-    "user": "almalinux",
-    "password": "almalinux",
+    "user": "root",
+    "password": "root",
     "disk_size": "9500",
     "output_directory": "output/almalinux",
     "output_image_name": "solus-almalinux-8-plesk"
@@ -15,15 +15,14 @@
       "qemuargs": [
         [ "-m", "1900m" ]
       ],
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "format": "qcow2",
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://repo.almalinux.org/almalinux/8.7/isos/x86_64/AlmaLinux-8.7-x86_64-minimal.iso",
-      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.7/isos/x86_64/CHECKSUM",
+      "iso_url": "https://repo.almalinux.org/almalinux/8.10/isos/x86_64/AlmaLinux-8.10-x86_64-minimal.iso",
+      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.10/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
+      "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "almalinux/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
@@ -31,7 +30,7 @@
       "host_port_min" : 2222,
       "host_port_max" : 4444,
       "vnc_port_min": 5901,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",
@@ -48,16 +47,6 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "almalinux/files/rc.local",
-      "destination": "/tmp/rc.local"
-    },
-    {
-      "type": "file",
-      "source": "almalinux/files/rc-local.conf",
-      "destination": "/tmp/rc-local.conf"
-    },
-    {
-      "type": "file",
       "source": "files/plesk/pleskswaprc",
       "destination": "/tmp/pleskswaprc"
     },
@@ -69,7 +58,7 @@
       "environment_vars": [
         "IS_SOLUS=true",
         "INSTALL_BYOL=true",
-        "INSTALL_PLESK_VERSION=18.0.51",
+        "INSTALL_PLESK_VERSION=18.0.63",
         "INSTALL_PLESK_PRESET=Recommended",
         "INSTALL_WITH_PLESK_COMPONENTS=",
         "INSTALL_WITHOUT_PLESK_COMPONENTS=",
@@ -86,7 +75,6 @@
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "almalinux/scripts/packages.sh",
-        "scripts/configure.sh",
         "scripts/plesk/configure.sh",
         "scripts/plesk/cleanup.sh"
       ]

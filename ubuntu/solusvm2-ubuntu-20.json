@@ -1,7 +1,7 @@
 {
   "variables": {
-    "user": "ubuntu",
-    "password": "ubuntu",
+    "user": "root",
+    "password": "root",
     "disk_size": "9000",
     "output_directory": "output/ubuntu",
     "output_image_name": "solusvm2-ubuntu-20"
@@ -11,7 +11,6 @@
       "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
         [
           "-m",
@@ -25,7 +24,7 @@
       "iso_url": "http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/mini.iso",
       "iso_checksum": "sha256:0e79e00bf844929d40825b1f0e8634415cda195ba23bae0b041911fde4dfe018",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'ubuntu' | sudo -S /sbin/shutdown -hP now",
+      "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "ubuntu/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
@@ -33,7 +32,7 @@
       "host_port_min": 2222,
       "host_port_max": 4444,
       "vnc_port_min": 5901,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",
@@ -74,7 +73,6 @@
       "execute_command": "echo | {{ .Vars }} sudo -S -E bash -xe '{{ .Path }}'",
       "scripts": [
         "ubuntu/packages.sh",
-        "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]
     }

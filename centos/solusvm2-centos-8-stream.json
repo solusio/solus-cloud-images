@@ -1,7 +1,7 @@
 {
   "variables": {
-    "user": "centos",
-    "password": "centos",
+    "user": "root",
+    "password": "root",
     "disk_size": "4000",
     "output_directory": "output/centos",
     "output_image_name": "solusvm2-centos-8-stream"
@@ -12,7 +12,6 @@
       "name": "solusvm2",
       "vm_name": "{{user `output_image_name`}}.qcow2",
       "type": "qemu",
-      "qemu_binary": "/usr/libexec/qemu-kvm",
       "qemuargs": [
         [ "-m", "1900m" ]
       ],
@@ -23,7 +22,7 @@
       "iso_url": "http://centos.mirror.far.fi/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-dvd1.iso",
       "iso_checksum": "file:http://centos.mirror.far.fi/8-stream/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
+      "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "centos/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
@@ -31,7 +30,7 @@
       "host_port_min" : 2222,
       "host_port_max" : 4444,
       "vnc_port_min": 5901,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",
@@ -47,21 +46,10 @@
 
   "provisioners": [
     {
-      "type": "file",
-      "source": "centos/files/rc.local",
-      "destination": "/tmp/rc.local"
-    },
-    {
-      "type": "file",
-      "source": "centos/files/rc-local.conf",
-      "destination": "/tmp/rc-local.conf"
-    },
-    {
       "type": "shell",
       "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "centos/scripts/packages.sh",
-        "scripts/configure.sh",
         "scripts/cleanup.sh"
       ]
     }

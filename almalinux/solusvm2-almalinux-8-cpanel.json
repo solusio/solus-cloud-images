@@ -1,7 +1,7 @@
 {
   "variables": {
-    "user": "almalinux",
-    "password": "almalinux",
+    "user": "root",
+    "password": "root",
     "disk_size": "10000",
     "output_directory": "output/almalinux",
     "output_image_name": "solusvm2-almalinux-8-cpanel"
@@ -19,10 +19,10 @@
       "headless": true,
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
-      "iso_url": "https://repo.almalinux.org/almalinux/8.9/isos/x86_64/AlmaLinux-8.9-x86_64-minimal.iso",
-      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.9/isos/x86_64/CHECKSUM",
+      "iso_url": "https://repo.almalinux.org/almalinux/8.10/isos/x86_64/AlmaLinux-8.10-x86_64-minimal.iso",
+      "iso_checksum": "file:https://repo.almalinux.org/almalinux/8.10/isos/x86_64/CHECKSUM",
       "output_directory": "{{user `output_directory`}}",
-      "shutdown_command": "echo 'centos' | sudo -S /sbin/shutdown -hP now",
+      "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "almalinux/http",
       "ssh_username": "{{ user `user` }}",
       "ssh_password": "{{ user `password` }}",
@@ -30,7 +30,7 @@
       "host_port_min": 2222,
       "host_port_max": 4444,
       "vnc_port_min": 5901,
-      "vnc_port_max": 6000,
+      "vnc_port_max": 5901,
       "http_port_min": 8501,
       "http_port_max": 8501,
       "ssh_wait_timeout": "40m",
@@ -63,7 +63,10 @@
       "type": "shell",
       "expect_disconnect": true,
       "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
-      "script": "almalinux/scripts/cpanel/cpanel_install.sh"
+      "script": "almalinux/scripts/cpanel/cpanel_install.sh",
+      "environment_vars": [
+        "INSTALL_CPANEL_VERSION=122"
+      ]
     },
     {
       "type": "shell",
