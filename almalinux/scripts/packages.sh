@@ -31,3 +31,9 @@ grub2-mkconfig -o /boot/grub2/grub.cfg
 grub2-mkconfig -o /boot/efi/EFI/almalinux/grub.cfg
 sed -i 's/linux16/linuxefi/g' /boot/efi/EFI/almalinux/grub.cfg
 sed -i 's/initrd16/initrdefi/g' /boot/efi/EFI/almalinux/grub.cfg
+
+# Disable kdump service
+systemctl mask kdump
+systemctl disable kdump
+# Remove crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M from /boot/loader/entries/
+grubby --remove-args="crashkernel" --update=ALL
