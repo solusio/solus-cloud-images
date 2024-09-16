@@ -13,12 +13,16 @@ pnputil -i -a e:\balloon\2k19\amd64\balloon.inf
 
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
 netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
+netsh advfirewall firewall set rule group="Network Discovery" new enable=No
+netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=No
+
+cmd /c Net user clouduser /active:no
 
 if exist a:\unattend.xml (
-  cmd /c Net user clouduser /active:no
   c:\windows\system32\sysprep\sysprep.exe /generalize /oobe /shutdown /unattend:a:\unattend.xml
 ) else (
-  cmd /c Net user clouduser /active:no
   del /F \Windows\System32\Sysprep\unattend.xml
   c:\windows\system32\sysprep\sysprep.exe /generalize /oobe /shutdown /quiet  
 )
+
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\disable-winrm.ps1
