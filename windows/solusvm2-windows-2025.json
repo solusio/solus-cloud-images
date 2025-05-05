@@ -1,0 +1,147 @@
+{
+  "variables": {
+    "user": "clouduser",
+    "password": "clouduser",
+    "disk_size": "30000",
+    "output_directory": "output/windows",
+    "output_image_name": "solus-windows-server-2025",
+    "name": "windows-server-2025-standard-x64-eval",
+    "cpus": "2",
+    "memory": "4096",
+    "ssh_winrm_host_port": "2299",
+    "virtio_win_iso": "./virtio-win.iso",
+    "iso_url": "https://s3.eu-central-1.amazonaws.com/images.dev.solusvm.com/win2025-eval-26100.1742.240906-0331.iso",
+    "iso_checksum": "sha256:d0ef4502e350e3c6c53c15b1b3020d38a5ded011bf04998e950720ac8579b23d",
+    "iso_target_path": "./windows2025.iso",
+    "windows_version": "2025",
+    "autounattend": "windows/http/2025/Autounattend.xml",
+    "winrm_username": "clouduser",
+    "winrm_password": "clouduser",
+    "headless": "true",
+    "restart_timeout": "5m"
+  },
+  "builders": [
+    {
+      "vm_name": "{{ user `output_image_name`}}.qcow2",
+      "type": "qemu",
+      "efi_boot": true,
+      "efi_firmware_code": "/usr/share/OVMF/OVMF_CODE_4M.fd",
+      "efi_firmware_vars": "build/OVMF_VARS_4M.fd",
+      "qemuargs": [
+	[
+	  "-blockdev",
+	  "{\"driver\":\"file\",\"filename\":\"/usr/share/OVMF/OVMF_CODE_4M.fd\",\"node-name\":\"libvirt-pflash0-storage\",\"auto-read-only\":true,\"discard\":\"unmap\"}"
+	],
+	[
+	  "-blockdev",
+	  "{\"node-name\":\"libvirt-pflash0-format\",\"read-only\":true,\"driver\":\"raw\",\"file\":\"libvirt-pflash0-storage\"}"
+	],
+	[
+	  "-blockdev",
+  	  "{\"driver\":\"file\",\"filename\":\"build/OVMF_VARS_4M.fd\",\"node-name\":\"libvirt-pflash1-storage\",\"discard\":\"unmap\"}"
+	],
+	[
+	  "-blockdev",
+	  "{\"node-name\":\"libvirt-pflash1-format\",\"read-only\":false,\"driver\":\"raw\",\"file\":\"libvirt-pflash1-storage\"}"
+	],
+	[
+	  "-machine",
+	  "pc,pflash0=libvirt-pflash0-format,pflash1=libvirt-pflash1-format,hpet=off"
+	],
+	[
+	  "-cpu",
+	  "host,migratable=on,hv-time=on,hv-relaxed=on,hv-vapic=on,hv-spinlocks=0x1fff,hv-vpindex=on,hv-synic=on,hv-stimer=on,hv-reset=on"
+	],
+        [
+          "-m",
+          "{{ user `memory` }}"
+        ],
+        [
+          "-smp",
+          "{{ user `cpus` }}"
+        ],
+	[
+	  "-enable-kvm"
+	],
+        [
+          "-drive",
+          "file={{ user `iso_target_path` }},media=cdrom,index=1"
+        ],
+        [
+          "-drive",
+          "file={{ user `virtio_win_iso` }},media=cdrom,index=3"
+        ],
+        [
+          "-drive",
+          "file={{user `output_directory`}}/{{ user `output_image_name`}}.qcow2,if=virtio,cache=writeback,discard=ignore,format=qcow2,index=2"
+        ]
+      ],
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_urls": [
+        "{{ user `iso_url` }}"
+      ],
+      "iso_target_path": "{{ user `iso_target_path` }}",
+      "communicator": "winrm",
+      "winrm_username": "{{ user `winrm_username` }}",
+      "winrm_password": "{{ user `winrm_password` }}",
+      "winrm_timeout": "12h",
+      "winrm_port": 5985,
+      "host_port_min": 5985,
+      "host_port_max": 5985,
+      "vnc_bind_address": "0.0.0.0",
+      "vnc_port_min": 5901,
+      "vnc_port_max": 5901,
+      "winrm_use_ssl": "false",
+      "winrm_insecure": "true",
+      "accelerator": "kvm",
+      "headless": "{{ user `headless` }}",
+      "output_directory": "{{user `output_directory`}}",
+      "shutdown_command": "a:/sysprep2025.bat",
+      "shutdown_timeout": "15m",
+      "disk_size": "{{ user `disk_size` }}",
+      "floppy_files": [
+        "{{ user `autounattend` }}",
+        "windows/scripts/*",
+        "windows/files/cloudbase-init.conf",
+        "windows/files/cloudbase-init-unattend.conf",
+        "windows/files/unattend.xml"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "scripts": [
+        "windows/scripts/debloat-windows-2025.ps1"
+      ],
+      "type": "powershell"
+    },
+    {
+      "restart_timeout": "{{user `restart_timeout`}}",
+      "type": "windows-restart"
+    },
+    {
+      "type": "file",
+      "source": "windows/scripts/InstallUpdates.ps1",
+      "destination": "C:\\Windows\\Temp\\InstallUpdates.ps1"
+    },
+    {
+      "type": "powershell",
+      "script": "windows/scripts/install_win_updates.ps1"
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "60m"
+    },
+    {
+      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+      "scripts": [
+        "windows/scripts/pin-powershell.bat",
+        "windows/scripts/set-winrm-automatic.bat",
+        "windows/scripts/uac-enable.bat",
+        "windows/scripts/dis-updates.bat",
+        "windows/scripts/compact.bat"
+      ],
+      "type": "windows-shell"
+    }
+  ]
+}

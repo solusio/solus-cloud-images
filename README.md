@@ -19,6 +19,7 @@ Check if the server where you want to build the image (or the build server for s
 - Free HDD space: minimum 10 GB 
 - Installed `qemu-kvm` package
 - Installed Unzip and curl. To install them, run `yum install unzip curl` for CentOS.
+- Installed `ovmf` package if you want to build Windows Server 2025
 
 ## 2. Installing Packer
 
@@ -73,6 +74,8 @@ This option may be useful if you transfer the image using the `--opt_destination
 
 When you have launched the build, we recommend that you connect to the build server via VNC.
 It will help you monitor the build and promptly see any errors if they occur.
+
+**Note:** Building Windows Server 2025 requires you to connect to VNC and press any key for Windows installation to begin. The rest is automated.
 
 ![](images/1.png)
 
