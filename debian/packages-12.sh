@@ -6,7 +6,9 @@ PACKAGES="
 cloud-init
 cloud-utils
 qemu-guest-agent
-systemd-resolved
+netcat-openbsd
+net-tools
+resolvconf
 "
 apt-get install -y --no-install-recommends ${PACKAGES}
-systemctl enable qemu-guest-agent systemd-resolved
+systemctl enable qemu-guest-agent

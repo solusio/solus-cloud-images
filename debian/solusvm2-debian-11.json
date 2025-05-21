@@ -4,7 +4,7 @@
 		"password": "root",
 		"disk_size": "4000",
 		"output_directory": "output/debian",
-		"output_image_name": "solus-debian-11"
+		"output_image_name": "solusvm2-debian-11"
 	},
 
 	"builders": [
@@ -19,8 +19,8 @@
 			"headless": true,
 			"accelerator": "kvm",
 			"disk_size": "{{ user `disk_size` }}",
-			"iso_url": "https://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/debian-11.6.0-amd64-netinst.iso",
-			"iso_checksum": "file:https://cdimage.debian.org/cdimage/release/current/amd64/iso-cd/SHA256SUMS",
+			"iso_url": "https://cdimage.debian.org/cdimage/archive/11.6.0/amd64/iso-cd/debian-11.6.0-amd64-netinst.iso",
+			"iso_checksum": "file:https://cdimage.debian.org/cdimage/archive/11.6.0/amd64/iso-cd/SHA256SUMS",
 			"output_directory": "{{user `output_directory`}}",
 			"shutdown_command": "/sbin/shutdown -hP now",
 			"http_directory": "debian/http",
@@ -64,7 +64,7 @@
 			"type": "shell",
 			"execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
 			"scripts": [
-				"debian/packages.sh",
+				"debian/packages-11.sh",
 				"debian/cleanup.sh"
 			]
 		}
