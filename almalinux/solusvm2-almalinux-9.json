@@ -21,7 +21,7 @@
       "accelerator": "kvm",
       "disk_size": "{{ user `disk_size` }}",
       "iso_url": "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9-latest-x86_64-minimal.iso",
-      "iso_checksum": "sha256:51ee8c6dd6b27dcae16d4c11d58815d6cfaf464eb0e7c75e026f8d5cc530b476",
+      "iso_checksum": "sha256:27a346c74d8755516a4ad2057ea29c2450454f1a928628734f26e12b0b8120d7",
       "output_directory": "{{user `output_directory`}}",
       "shutdown_command": "/sbin/shutdown -hP now",
       "http_directory": "almalinux/http",

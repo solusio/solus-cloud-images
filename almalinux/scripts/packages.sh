@@ -27,11 +27,6 @@ sed -i -e 's/#LogLevel=info/LogLevel=notice/'  /etc/systemd/user.conf
 sed -i 's/quiet/console=tty0 console=ttyS0,115200n8/' /etc/default/grub
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
-# Creating config for UEFI boot
-grub2-mkconfig -o /boot/efi/EFI/almalinux/grub.cfg
-sed -i 's/linux16/linuxefi/g' /boot/efi/EFI/almalinux/grub.cfg
-sed -i 's/initrd16/initrdefi/g' /boot/efi/EFI/almalinux/grub.cfg
-
 # Disable kdump service
 systemctl mask kdump
 systemctl disable kdump
