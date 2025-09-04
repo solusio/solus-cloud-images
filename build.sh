@@ -56,6 +56,7 @@ usage() {
       almalinux-8-cpanel          cPanel on AlmaLinux 8 image
       almalinux-8-plesk           AlmaLinux 8 image with Plesk
       almalinux-9                 AlmaLinux 9 images
+      almalinux-10                AlmaLinux 10 images
       rockylinux-8                RockyLinux 8 images
       rockylinux-9                RockyLinux 9 images
       vzlinux-8                   VzLinux 8 images
@@ -137,6 +138,12 @@ do_build() {
   almalinux-9)
     inten="Build AlmaLinux 9 cloud-init image"
     config="almalinux/solusvm2-almalinux-9.json"
+    image_path="output/almalinux"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  almalinux-10)
+    inten="Build AlmaLinux 10 cloud-init image"
+    config="almalinux/solusvm2-almalinux-10.json"
     image_path="output/almalinux"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -357,7 +364,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 rockylinux-9 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk windows-2025"
+image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 almalinux-10 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 rockylinux-9 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk windows-2025"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
