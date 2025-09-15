@@ -1,0 +1,59 @@
+{
+  "variables": {
+    "user": "root",
+    "password": "root",
+    "disk_size": "6000",
+    "output_directory": "output/almalinux",
+    "output_image_name": "solus-almalinux-10"
+  },
+
+  "builders": [
+    {
+      "name": "solusvm2",
+      "vm_name": "{{user `output_image_name`}}.qcow2",
+      "type": "qemu",
+      "qemuargs": [
+        [ "-m", "1900m" ],
+        [ "-cpu", "host" ]
+      ],
+      "format": "qcow2",
+      "headless": true,
+      "accelerator": "kvm",
+      "disk_size": "{{ user `disk_size` }}",
+      "iso_url": "https://repo.almalinux.org/almalinux/10/isos/x86_64/AlmaLinux-10.0-x86_64-minimal.iso",
+      "iso_checksum": "sha256:e73ccc95ff21a43ab23eebe227257fa34df091570b2bcf8a23f918bf9b662fc3",
+      "output_directory": "{{user `output_directory`}}",
+      "shutdown_command": "/sbin/shutdown -hP now",
+      "http_directory": "almalinux/http",
+      "ssh_username": "{{ user `user` }}",
+      "ssh_password": "{{ user `password` }}",
+      "disk_compression": true,
+      "host_port_min" : 2222,
+      "host_port_max" : 4444,
+      "vnc_port_min": 5901,
+      "vnc_port_max": 5901,
+      "http_port_min": 8501,
+      "http_port_max": 8501,
+      "ssh_wait_timeout": "40m",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "vnc_bind_address": "0.0.0.0",
+      "boot_wait": "10s",
+      "boot_command": [
+          "<up><wait2>e<down><down><wait2><end><wait2> inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks-almalinux-10.cfg",
+          "<f10>"
+      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `password` }}' | {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
+      "scripts": [
+        "almalinux/scripts/packages.sh",
+        "scripts/cleanup.sh"
+      ]
+    }
+  ]
+}

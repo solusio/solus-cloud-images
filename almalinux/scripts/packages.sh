@@ -22,7 +22,10 @@ systemctl mask NetworkManager-wait-online.service
 systemctl enable serial-getty@ttyS0.service
 
 # Logs flooded with systemd messages: Created slice, Starting Session https://access.redhat.com/solutions/1564823
-sed -i -e 's/#LogLevel=info/LogLevel=notice/'  /etc/systemd/user.conf
+# Supposedly this issue does not affect Alma 10, lets skip it if file does not exist.
+if [ -e /etc/systemd/user.conf ]; then
+	sed -i -e 's/#LogLevel=info/LogLevel=notice/'  /etc/systemd/user.conf
+fi
 
 sed -i 's/quiet/console=tty0 console=ttyS0,115200n8/' /etc/default/grub
 grub2-mkconfig -o /boot/grub2/grub.cfg
