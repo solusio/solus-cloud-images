@@ -38,6 +38,7 @@ usage() {
       debian-10                   Debian 10 images
       debian-11                   Debian 11 images
       debian-12                   Debian 12 images
+      debian-13                   Debian 13 images
       ubuntu-18                   Ubuntu 18.04 images
       ubuntu-18-plesk             Ubuntu 18.04 images with Plesk
       ubuntu-20                   Ubuntu 20.04 images
@@ -168,6 +169,12 @@ do_build() {
   debian-12)
     inten="Build debian 12 cloud-init image"
     config="debian/solusvm2-debian-12.json"
+    image_path="output/debian"
+    [[ ! -d image_path ]] || rm -rf image_path
+    ;;
+  debian-13)
+    inten="Build debian 13 cloud-init image"
+    config="debian/solusvm2-debian-13.json"
     image_path="output/debian"
     [[ ! -d image_path ]] || rm -rf image_path
     ;;
@@ -364,7 +371,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 almalinux-10 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 fedora oracle-8 rockylinux-8 rockylinux-9 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk windows-2025"
+image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 almalinux-10 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 debian-13 fedora oracle-8 rockylinux-8 rockylinux-9 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk windows-2025"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
