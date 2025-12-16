@@ -63,6 +63,7 @@ usage() {
       vzlinux-8                   VzLinux 8 images
       openvz-7                    OpenVZ 7 images
       openvz-8                    OpenVZ 8 images
+      opensuse-16                 OpenSUSE 16 images
 
     Options:
       --cleanup                   Cleans up the output directory after the build by removing a built OS image. This option may be useful if you transfer the image via scp to another server using the --opt_destination option. After the image was transferred, you may no longer need it in the output directory.
@@ -122,157 +123,157 @@ do_build() {
     inten="Build AlmaLinux 8 cloud-init image"
     config="almalinux/solusvm2-almalinux-8.json"
     image_path="output/almalinux"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   almalinux-8-plesk)
     inten="Build Plesk on AlmaLinux 8"
     config="almalinux/solusvm2-almalinux-8-plesk.json"
     image_path="output/almalinux"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   almalinux-8-cpanel)
     inten="Build cPanel on AlmaLinux 8"
     config="almalinux/solusvm2-almalinux-8-cpanel.json"
     image_path="output/almalinux"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   almalinux-9)
     inten="Build AlmaLinux 9 cloud-init image"
     config="almalinux/solusvm2-almalinux-9.json"
     image_path="output/almalinux"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   almalinux-10)
     inten="Build AlmaLinux 10 cloud-init image"
     config="almalinux/solusvm2-almalinux-10.json"
     image_path="output/almalinux"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   alpine)
     inten="Build alpine cloud-init image"
     config="alpine/solusvm2-alpine.json"
     image_path="output/alpine"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   debian-10)
     inten="Build debian 10 cloud-init image"
     config="debian/solusvm2-debian-10.json"
     image_path="output/debian"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   debian-11)
     inten="Build debian 11 cloud-init image"
     config="debian/solusvm2-debian-11.json"
     image_path="output/debian"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   debian-12)
     inten="Build debian 12 cloud-init image"
     config="debian/solusvm2-debian-12.json"
     image_path="output/debian"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   debian-13)
     inten="Build debian 13 cloud-init image"
     config="debian/solusvm2-debian-13.json"
     image_path="output/debian"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   fedora)
     inten="Build fedora image"
     config="fedora/solusvm2-fedora-latest.json"
     image_path="output/fedora"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   centos-7)
     inten="Build centos 7 cloud-init image"
     config="centos/solusvm2-centos-7.json"
     image_path="output/centos"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   centos-7-plesk)
     inten="Build centos 7 cloud-init image with Plesk"
     config="centos/solusvm2-centos-7-plesk.json"
     image_path="output/centos"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   centos-8-stream)
     inten="Build centos 8 stream cloud-init image"
     config="centos/solusvm2-centos-8-stream.json"
     image_path="output/centos"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   oracle-8)
     inten="Build oracle 8 cloud-init image"
     config="oracle/solusvm2-oracle-8.json"
     image_path="output/oracle"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   rockylinux-8)
     inten="Build RockyLinux 8 cloud-init image"
     config="rockylinux/solusvm2-rockylinux-8.json"
     image_path="output/rockylinux"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   rockylinux-9)
     inten="Build RockyLinux 9 cloud-init image"
     config="rockylinux/solusvm2-rockylinux-9.json"
     image_path="output/rockylinux"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   ubuntu-18)
     inten="Build ubuntu 18 cloud-init image"
     config="ubuntu/solusvm2-ubuntu-18.json"
     image_path="output/ubuntu"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   ubuntu-18-plesk)
     inten="Build ubuntu 18 cloud-init image with plesk"
     config="ubuntu/solusvm2-ubuntu-18-plesk.json"
     image_path="output/ubuntu"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   ubuntu-20)
     inten="Build ubuntu 20 cloud-init image"
     config="ubuntu/solusvm2-ubuntu-20.json"
     image_path="output/ubuntu"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   ubuntu-20-plesk)
     inten="Build ubuntu 20 cloud-init image"
     config="ubuntu/solusvm2-ubuntu-20-plesk.json"
     image_path="output/ubuntu"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   ubuntu-20-cpanel)
     inten="Build cPanel ubuntu 20 cloud-init image"
     config="ubuntu/solusvm2-ubuntu-20-cpanel.json"
     image_path="output/ubuntu"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   vzlinux-8)
     inten="Build VzLinux 8 cloud-init image"
     config="vzlinux/solusvm2-vzlinux-8.json"
     image_path="output/vzlinux"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   openvz-7)
     inten="Build OpenVZ 7 cloud-init image"
     config="openvz/solusvm2-openvz-7.json"
     image_path="output/openvz"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   openvz-8)
     inten="Build OpenVZ 8 cloud-init image"
     config="openvz/solusvm2-openvz-8.json"
     image_path="output/openvz"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   windows-2019)
     inten="Build windows server 2019 cloud-based-init image"
     config="windows/solusvm2-windows-2019.json"
     image_path="output/windows"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     if [[ ! -f "./virtio-win.iso" ]]; then
         wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-5/virtio-win.iso
     fi
@@ -281,7 +282,7 @@ do_build() {
     inten="Build windows server 2019 cloud-based-init image with Plesk"
     config="windows/solusvm2-windows-2019-plesk.json"
     image_path="output/windows"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     if [[ ! -f "./virtio-win.iso" ]]; then
         wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.173-5/virtio-win.iso
     fi
@@ -290,7 +291,7 @@ do_build() {
     inten="Build windows server 2022 cloud-based-init image"
     config="windows/solusvm2-windows-2022.json"
     image_path="output/windows"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     if [[ ! -f "./virtio-win.iso" ]]; then
         wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.204-1/virtio-win.iso
     fi
@@ -299,7 +300,7 @@ do_build() {
     inten="Build windows server 2025 cloud-based-init image"
     config="windows/solusvm2-windows-2025.json"
     image_path="output/windows"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     if [[ ! -f "./virtio-win.iso" ]]; then
 	wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.271-1/virtio-win.iso
     fi
@@ -309,10 +310,16 @@ do_build() {
     inten="Build windows server 2022 cloud-based-init image with Plesk"
     config="windows/solusvm2-windows-2022-plesk.json"
     image_path="output/windows"
-    [[ ! -d image_path ]] || rm -rf image_path
+    [[ ! -d $image_path ]] || rm -rf $image_path
     if [[ ! -f "./virtio-win.iso" ]]; then
         wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.204-1/virtio-win.iso
     fi
+    ;;
+  opensuse-16)
+    inten="Build OpenSUSE 16 cloud-init image"
+    config="opensuse/solusvm2-opensuse-16.pkr.hcl"
+    image_path="output/opensuse"
+    [[ ! -d $image_path ]] || rm -rf $image_path
     ;;
   *)
     echo "An unknown image type $opt_type"
@@ -371,7 +378,7 @@ image_path=
 destination=
 opt_cleanup=
 
-image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 almalinux-10 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 debian-13 fedora oracle-8 rockylinux-8 rockylinux-9 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk windows-2025"
+image_types_allowed="almalinux-8 almalinux-8-cpanel almalinux-8-plesk almalinux-9 almalinux-10 alpine centos-7 centos-7-plesk centos-8-stream debian-10 debian-11 debian-12 debian-13 fedora oracle-8 rockylinux-8 rockylinux-9 ubuntu-18 ubuntu-18-plesk ubuntu-20 ubuntu-20-plesk ubuntu-20-cpanel vzlinux-8 openvz-7 openvz-8 windows-2019 windows-2019-plesk windows-2022 windows-2022-plesk windows-2025 opensuse-16"
 allowed_actions="build"
 
 opt_command="$(get_arg $1 $allowed_actions)"
