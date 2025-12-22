@@ -1,0 +1,117 @@
+{
+    "product": {
+        "id": "openSUSE_Leap"
+    },
+    "network": {
+        "connections": [
+            {
+                "id": "main",
+                "interface": "eth0",
+                "method4": "auto"
+            }
+        ]
+    },
+    "localization": {
+        "language": "en_US.UTF-8",
+        "keyboard": "us",
+        "timezone": "Europe/Sofia"
+    },
+    "hostname": {
+        "static": "opensuse16.svm2.tld",
+        "transient": "installation.svm2.tld"
+    },
+    "storage": {
+        "drives": [
+            {
+                "search": "/dev/vda",
+                "partitions": [
+                    {
+                        "size": "1mb",
+                        "id": "bios_boot"
+                    },
+                    {
+                        "filesystem": {
+                            "path": "/",
+                            "type": "ext4"
+                        }
+                    }
+                ]
+            }
+        ],
+        "boot": {
+            "configure": true
+        }
+    },
+    "root": {
+        "password": "linux"
+    },
+    "software": {
+        "extraRepositories": [
+            {
+                "alias": "repo1",
+                "url": "https://mirror.hs-esslingen.de/pub/Mirrors/ftp.opensuse.org/distribution/leap/16.0/repo/oss/",
+                "allowUnsigned": true
+            }
+        ],
+        "packages": [
+            "agama-scripts",
+            "cloud-init",
+            "qemu-guest-agent",
+            "shim-x64",
+            "grub2-i386-pc",
+            "grub2-x86_64-efi",
+            "cloud-utils-growpart",
+            "gdisk"
+        ],
+        "patterns": {
+            "remove": [
+                "selinux",
+                "sw_management"
+            ]
+        }
+    },
+    "scripts": {
+        "init": [
+            {
+                "name": "activate-cloud-init",
+                "chroot": true,
+                "content": "#!/usr/bin/bash\nsystemctl enable cloud-init"
+            },
+            {
+                "name": "activate-cloud-config",
+                "chroot": true,
+                "content": "#!/usr/bin/bash\nsystemctl enable cloud-config"
+            },
+            {
+                "name": "activate-cloud-init-local",
+                "chroot": true,
+                "content": "#!/usr/bin/bash\nsystemctl enable cloud-init-local"
+            },
+            {
+                "name": "activate-cloud-final",
+                "chroot": true,
+                "content": "#!/usr/bin/bash\nsystemctl enable cloud-final"
+            },
+            {
+                "name": "activate-guest-agent",
+                "chroot": true,
+                "content": "#!/usr/bin/bash\nsystemctl enable qemu-guest-agent.service"
+            },
+            {
+                "name": "configure-ssh",
+                "chroot": true,
+                "content": "#!/usr/bin/bash\nsed -i '/^[#]*PermitRootLogin/s/.*/PermitRootLogin yes/' /usr/etc/ssh/sshd_config\nsystemctl enable sshd --now\n"
+            },
+            {
+                "name": "configure-bios",
+                "chroot": true,
+                "content": "#!/usr/bin/bash\ngrub2-install --target=i386-pc --recheck /dev/vda\ngrub2-mkconfig -o /boot/grub2/grub.cfg\n"
+            },
+            {
+                "name": "do-cleanup-basic",
+                "chroot": true,
+                "content": "#!/usr/bin/bash\nzypper rr repo1\ncloud-init clean --logs\nrm -rf /var/log/* /tmp/* /var/tmp/*\n"
+            }
+        ]
+    }
+}
