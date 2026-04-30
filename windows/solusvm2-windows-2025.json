@@ -99,6 +99,10 @@
       "shutdown_command": "a:/sysprep2025.bat",
       "shutdown_timeout": "15m",
       "disk_size": "{{ user `disk_size` }}",
+      "boot_wait": "1s",
+      "boot_command": [
+          "<up><up>"
+      ],
       "floppy_files": [
         "{{ user `autounattend` }}",
         "windows/scripts/*",
