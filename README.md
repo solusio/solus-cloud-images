@@ -26,12 +26,15 @@ Check if the server where you want to build the image (or the build server for s
 Install Packer by HashiCorp:
 
 1. Access the build server command line via SSH.
-2. Download Packer:
+2. Install packer by following steps tailored for your distribution:
 
-   `curl -kO https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_linux_amd64.zip`
+    https://developer.hashicorp.com/packer/install
 
-4. Unzip the Packer archive by running the `unzip packer_1.7.8_linux_amd64.zip` command.
-5. Run the `cp packer /usr/sbin/` command to copy the Packer binary to the `/usr/sbin/` directory.
+3. Install `qemu` plugin:
+
+    ```
+    packer plugins install github.com/hashicorp/qemu
+    ```
 
 ## 3. Downloading the repository and customizing the OS image
 
