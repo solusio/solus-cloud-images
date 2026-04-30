@@ -75,8 +75,6 @@ This option may be useful if you transfer the image using the `--opt_destination
 When you have launched the build, we recommend that you connect to the build server via VNC.
 It will help you monitor the build and promptly see any errors if they occur.
 
-**Note:** Building Windows Server 2025 requires you to connect to VNC and press any key for Windows installation to begin. The rest is automated.
-
 ![](images/1.png)
 
 ![](images/2.png)
